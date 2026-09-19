@@ -445,4 +445,23 @@ Surprises:  1) PLAN.md's "zero duplicate codes" claim is WRONG for blocks: the l
             is RFC-4180-correct.
 Next:       Phase 2 API code (done in-session, awaiting Phase 3 tests), Phase 4 workflow,
             Phase 5 curl gate.
-Commit:     pending — committing now.
+Commit:     d0a7ce0
+
+### Phases 2–5 — 19/09/2026
+Done:       Full API: db.js loader, meta.js attribution, envelope validators.js,
+            4 controllers, index.js (CORS, 100/15min/IP rate limit, JSON 404,
+            Express 5 4-arg error handler honoring upstream status). Weekly
+            workflow .github/workflows/weekly-ingest.yml (Mondays 03:00 UTC,
+            actions/checkout@v7 + setup-node@v7 — majors verified live per the
+            "verify, don't assume" rule, p7zip-full safety net, tests re-run in
+            CI before commit, commit only on real diffs with row-count changelog).
+Verified:   npm test = 19/19 (9 transform + 10 route incl. malformed-JSON body
+            -> JSON 400 envelope). Phase 5 curl gate PASSED: root/states/
+            districts?state/subdistricts?district/blocks?district/search = 200
+            with correct envelopes; missing filter -> 400 MISSING_PARAM; unknown
+            state/district code -> 404 with valid values; unknown route -> JSON
+            404 ENDPOINT_NOT_FOUND. search?q=ramgarh returns parent-chained,
+            grouped results (duplicate-name trap handled).
+Next:       Commit; then Phase 6 (frontend portal) only after user go-ahead, and
+            Phase 7 (Render) remains user-gated.
+Commit:     this commit.

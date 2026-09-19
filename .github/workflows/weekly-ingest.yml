@@ -1,0 +1,60 @@
+# Weekly LGD ingestion (Decision 4: weekly cron, commit only on real diffs).
+# Upstream publishes daily; boundary changes are infrequent, so weekly is enough.
+# Runs the ingest script, then commits backend/data/ only if it actually changed,
+# with a changelog-style message showing per-level row-count deltas.
+name: weekly-ingest
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # Mondays 03:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      # Safety net (Decision 5): p7zip-full is normally preinstalled on
+      # ubuntu-latest, but installing explicitly removes the dependency on
+      # runner-image contents matching docs.
+      - name: Install 7zip
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full
+
+      - name: Ingest LGD data
+        working-directory: backend
+        run: |
+          npm ci
+          node scripts/ingest.js
+
+      # Data files must still agree with the code (integrity tests re-run
+      # against the freshly ingested files before anything is committed).
+      - name: Run tests
+        working-directory: backend
+        run: npm test
+
+      - name: Commit only if data actually changed
+        run: |
+          if git diff --quiet backend/data/; then
+            echo "No real changes in ingested data — skipping commit (Decision 4)."
+            exit 0
+          fi
+          SRC_DATE=$(jq -r '.source_date' backend/data/meta.json)
+          NEW_COUNTS=$(jq -r '[.row_counts.states, .row_counts.districts, .row_counts.subdistricts, .row_counts.blocks] | @csv' backend/data/meta.json)
+          OLD_COUNTS=$(git show HEAD:backend/data/meta.json | jq -r '[.row_counts.states, .row_counts.districts, .row_counts.subdistricts, .row_counts.blocks] | @csv')
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/data/
+          git commit -m "ingest: rows (states,districts,subdistricts,blocks) ${OLD_COUNTS} -> ${NEW_COUNTS}, source ${SRC_DATE}"
+          git push

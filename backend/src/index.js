@@ -79,12 +79,24 @@ app.use((req, res) => {
 
 // Terminal error handler — Express 5 requires exactly 4 args to be recognized
 // as an error handler (arity rule; a 2-arg catch-all silently never fires).
-// Express 5 auto-forwards async throws/rejections here.
+// Express 5 auto-forwards async throws/rejections and body-parse errors here.
+// Honors upstream status (e.g. 400 from malformed JSON), else 500.
 app.use((err, req, res, next) => {
   console.error('Unhandled server error:', err);
-  return sendError(res, 'INTERNAL_SERVER_ERROR', 'An unexpected error occurred.', 500);
+  const status = err && (err.status || err.statusCode) ? err.status || err.statusCode : 500;
+  return sendError(
+    res,
+    status === 500 ? 'INTERNAL_SERVER_ERROR' : 'BAD_REQUEST',
+    status === 500 ? 'An unexpected error occurred.' : 'Malformed request.',
+    status
+  );
 });
 
-app.listen(PORT, () => {
-  console.log(`LGD Admin Hierarchy API server running on port ${PORT}`);
-});
+// Export the app for tests; listen only when run directly (not under node --test).
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`LGD Admin Hierarchy API server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
