@@ -48,6 +48,21 @@ Matches CONVENTIONS.md's source-of-truth project. `start` script, `PORT` from
 ## Build — Frontend portal sequenced inside this plan, gated after the backend
 Phase 6 (portal) cannot start until Phase 5 (backend curl-verified gate) passes.
 
+## Build — Frontend visual identity: light "government gazette / census codebook" system
+Deliberately differentiated from both sibling APIs (calendar-api dark mode, mandi-api
+earthy-harvest golds). Warm paper background, ink-navy text, single seal-red accent,
+serif display headings, monospace for all code, hairline rules and double-rule
+borders borrowed from official documents. No dark mode, no gradients, no glow.
+Backend-decoupled fetches (`VITE_API_BASE_URL`, default http://localhost:3000) — the
+portal is fully usable when the backend is later deployed, and Vite preview serves
+all SPA routes because only data endpoints need the backend.
+
+## Build — Frontend package pins verified against installed node_modules
+React 19.2.8, react-dom 19.2.8, react-router-dom 7.18.3, vite 8.2.2,
+@vitejs/plugin-react 6.1.1, lucide-react 1.41.0 — the versions recorded in PLAN.md
+were queried from the npm registry on 05/09/2026 and re-verified as the actually
+installed versions on 19/09/2026, not trusted from memory.
+
 ## Build — Attribution: GODL-India requires credit with a link back to the source
 API root route, `/v1` responses' `meta`, and the frontend footer all credit "Ministry of
 Panchayati Raj — Local Government Directory" with links to

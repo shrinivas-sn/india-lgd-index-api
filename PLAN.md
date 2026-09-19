@@ -335,26 +335,26 @@ must wait for the user) succeeds.
 into the Progress Log. Do not proceed to Phase 6 without this evidence.
 
 ### Phase 6 — Frontend portal (React + Vite)
-- [ ] Scaffold `frontend/` per CONVENTIONS.md's pinned page set: Home, Playground, Docs,
+- [x] Scaffold `frontend/` per CONVENTIONS.md's pinned page set: Home, Playground, Docs,
       Status, 404 — real routes via `react-router-dom`, not a tab switcher.
-- [ ] Reuse component names where the equivalent exists: `JsonViewer`, `CodeSnippet`,
+- [x] Reuse component names where the equivalent exists: `JsonViewer`, `CodeSnippet`,
       `StatusBadge`, `CustomSelect` (read `E:\mandi-api\frontend\src\components\` for the
       pattern, not the styling — domain content here is states/districts/etc, not
       commodities).
-- [ ] Playground page: pick a level (state/district/subdistrict/block), pick filters via
+- [x] Playground page: pick a level (state/district/subdistrict/block), pick filters via
       `CustomSelect`, see live JSON response via `JsonViewer`, see the actual `curl`
       equivalent via `CodeSnippet`.
-- [ ] Docs page: documents all 5 endpoints, params, envelope shapes, rate limit,
+- [x] Docs page: documents all 5 endpoints, params, envelope shapes, rate limit,
       attribution requirement (Decision 9) with the required link.
-- [ ] Status page: shows `meta.source_date`/`ingested_at` from the backend's `/` or a
+- [x] Status page: shows `meta.source_date`/`ingested_at` from the backend's `/` or a
       dedicated `/v1/status`-style read of `meta.json`, so users can see data freshness —
       `StatusBadge` component reused here.
-- [ ] **Visual identity** must be derived from this specific problem domain (government
+- [x] **Visual identity** must be derived from this specific problem domain (government
       administrative/civic-data reference tool) and differentiated from calendar-api's
       dark-mode system and mandi-api's earthy/harvest palette — invoke `frontend-design`
       or `no-ai-slop` (scratch-build) for this, per api-idea-scout §4a's rule. Do not
       default to either sibling's palette.
-- [ ] Footer includes the GODL-India attribution link (Decision 9) on every page.
+- [x] Footer includes the GODL-India attribution link (Decision 9) on every page.
 
 **Gate:** frontend builds (`npm run build`) with no errors; every page renders and the
 Playground round-trips a real request to the local backend.
@@ -464,4 +464,40 @@ Verified:   npm test = 19/19 (9 transform + 10 route incl. malformed-JSON body
             grouped results (duplicate-name trap handled).
 Next:       Commit; then Phase 6 (frontend portal) only after user go-ahead, and
             Phase 7 (Render) remains user-gated.
+Commit:     this commit.
+
+### Phase 6 — 19/09/2026
+Done:       frontend/ portal per CONVENTIONS.md page set: Home, Playground, Docs,
+            Status, 404 — real react-router-dom routes, not a tab switcher.
+            Mandated component names reused (JsonViewer, CodeSnippet, StatusBadge,
+            CustomSelect — the select rebuilt with search + sublabels for 780-row
+            district lists). Visual identity from the no-ai-slop scratch-build
+            flow: light "government gazette / census codebook" system (paper bg,
+            ink-navy text, single seal-red accent, serif display, mono code,
+            double-rule document borders) — deliberately unlike calendar-api
+            (dark) and mandi-api (harvest golds). Recipe step 1 done: repo
+            CLAUDE.md + .claudeignore. Pins installed and re-verified against
+            node_modules: react 19.2.8, react-dom 19.2.8, react-router-dom
+            7.18.3, vite 8.2.2, @vitejs/plugin-react 6.1.1, lucide-react 1.41.0.
+            Fetches are backend-decoupled via VITE_API_BASE_URL (default
+            localhost:3000); vite proxy removed as dead config.
+Verified:   npm run build clean (vite 8.2.2, 37 modules, zero errors); vite
+            preview serves all five routes (/, /playground, /docs, /status,
+            catch-all) with the SPA shell; Playground data path round-tripped
+            live against the running backend: /v1/states count=36,
+            districts?state=18 real rows, missing filter -> 400 MISSING_PARAM,
+            unknown district -> 404 INVALID_DISTRICT_CODE, search?q=ramgarh ->
+            31 grouped matches across 4 levels. Source-level slop scan: zero
+            Tier A/B hits ("Inter" x7 were cursor/setInterval substrings; zero
+            arbitrary spacing values; 3 shadow/radius uses total, all functional
+            dropdown/pill affordances).
+Surprises:  Vite 8 preview found 4173 busy and silently served on 4174 — first
+            smoke test 404'd against the wrong port; re-ran against the logged
+            port. Editor 6k-char limit split large writes again (index.css x3,
+            PlaygroundPage/DocsPage x2); one corrupted CSS line caught in the
+            verification diff and fixed before build.
+Next:       no-ai-slop Step 4 scorecard to user (browser pixel check pending —
+            no chrome tool in this session; served build + live API left running
+            for the user's own click-through), then Phase 7 quality gates when
+            scheduled. Phase 7 (Render) stays user-gated.
 Commit:     this commit.
