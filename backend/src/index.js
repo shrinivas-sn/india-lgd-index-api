@@ -1,0 +1,90 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+
+const { getStates } = require('./controllers/states');
+const { getDistricts } = require('./controllers/districts');
+const { getSubdistricts, getBlocks } = require('./controllers/levels');
+const { search } = require('./controllers/search');
+const { sendError } = require('./validators');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// Decision 10: 100 requests / 15 min / IP (CONVENTIONS.md default).
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      code: 'TOO_MANY_REQUESTS',
+      message: 'Rate limit exceeded. Maximum 100 requests per 15 minutes allowed per IP.',
+    },
+  },
+});
+
+app.use('/v1', apiLimiter);
+
+// Root route = health check (CONVENTIONS.md) + Decision 9 attribution.
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Welcome to LGD India Administrative Hierarchy API v1',
+    data: {
+      description:
+        'Official administrative hierarchy of India (states, districts, sub-districts, blocks) with government LGD codes, from the Ministry of Panchayati Raj Local Government Directory.',
+      endpoints: {
+        states: '/v1/states',
+        districts: '/v1/districts?state=<state_code>',
+        subdistricts: '/v1/subdistricts?district=<district_code>',
+        blocks: '/v1/blocks?district=<district_code>',
+        search: '/v1/search?q=<text>',
+      },
+    },
+    attribution: {
+      source: 'Ministry of Panchayati Raj — Local Government Directory (LGD)',
+      lgd_url: 'https://lgdirectory.gov.in/',
+      data_mirror_url: 'https://github.com/ramSeraph/opendata',
+      license: 'GODL-India',
+    },
+  });
+});
+app.get('/v1', (req, res) => {
+  res.redirect(307, '/');
+});
+
+// v1 API routes
+app.get('/v1/states', getStates);
+app.get('/v1/districts', getDistricts);
+app.get('/v1/subdistricts', getSubdistricts);
+app.get('/v1/blocks', getBlocks);
+app.get('/v1/search', search);
+
+// Terminal 404 — JSON envelope, never Express's default HTML error page.
+app.use((req, res) => {
+  return sendError(
+    res,
+    'ENDPOINT_NOT_FOUND',
+    `Route ${req.method} ${req.path} does not exist on this server.`,
+    404
+  );
+});
+
+// Terminal error handler — Express 5 requires exactly 4 args to be recognized
+// as an error handler (arity rule; a 2-arg catch-all silently never fires).
+// Express 5 auto-forwards async throws/rejections here.
+app.use((err, req, res, next) => {
+  console.error('Unhandled server error:', err);
+  return sendError(res, 'INTERNAL_SERVER_ERROR', 'An unexpected error occurred.', 500);
+});
+
+app.listen(PORT, () => {
+  console.log(`LGD Admin Hierarchy API server running on port ${PORT}`);
+});

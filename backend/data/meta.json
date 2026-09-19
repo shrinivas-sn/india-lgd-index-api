@@ -1,0 +1,14 @@
+{
+  "source_date": "19Sep2026",
+  "ingested_at": "2026-09-19T16:05:53.896Z",
+  "row_counts": {
+    "states": 36,
+    "districts": 784,
+    "subdistricts": 7092,
+    "blocks": 7338
+  },
+  "source": "Ministry of Panchayati Raj — Local Government Directory (LGD)",
+  "lgd_url": "https://lgdirectory.gov.in/",
+  "data_mirror_url": "https://github.com/ramSeraph/opendata",
+  "license": "GODL-India"
+}
