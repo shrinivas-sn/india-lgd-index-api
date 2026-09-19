@@ -12,6 +12,12 @@ const { sendError } = require('./validators');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// PaaS deploys (Render/Railway) terminate TLS at a proxy that sets
+// X-Forwarded-For. Without this, express-rate-limit v8 raises
+// ERR_ERL_UNEXPECTED_X_FORWARDED_FOR on every such request and buckets all
+// clients under the proxy IP. One trusted hop; never 'true' (permissive).
+app.set('trust proxy', 1);
+
 app.use(cors());
 app.use(express.json());
 

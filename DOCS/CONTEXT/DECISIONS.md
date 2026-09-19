@@ -98,3 +98,30 @@ orphan/duplicate/blank-code rejection) — no network, no date dependency. 9/9 p
 failure. Missing required param → 400. Invalid enum-like value → 404 with the list of
 valid values — never return unbounded/unfiltered data when a required filter is missing
 or wrong.
+
+## Phase 7 — Quality gates (19/09/2026)
+
+- **no-ai-slop — attempt 1, PASS (source level).** Gazette/codebook identity derived from
+  the domain; framework pins verified in `node_modules` (React 19.2.8, Vite 8.2.2,
+  router 7.18.3); Tier A/B slop-pattern scan over frontend source: 0 hits. Limitation:
+  no browser tool in this session, so the rendered-pixel check did not run; code-level
+  review only.
+- **no-ai-slop-writing — attempt 1, PASS (2 self-caught fixes).** README rewritten from a
+  5-line stub into a full dev doc using only live-verified numbers/shapes; pattern scan
+  over portal copy and `DOCS/`: 0 hits. Self-caught during edit: removed an invented
+  rationale ("smallest complete list") and a leftover build marker.
+- **prod-bug-auditor (production-readiness) — attempt 1, PASS (1 confirmed bug, fixed).**
+  8-dimension scorecard + two-pass scan/verify. CONFIRMED: no `trust proxy` setting while
+  express-rate-limit v8.7.0 validates `X-Forwarded-For` — behind Render/Railway every
+  client shares one rate bucket and the library raises
+  `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR`. Fixed: `app.set('trust proxy', 1)` in
+  `backend/src/index.js`. Regression-verified: 19/19 tests, full curl sweep of all
+  endpoints + error paths, XFF-carrying request returns 200, server logs clean.
+  Deliberate districts contract (784 rows unfiltered) re-checked against CONVENTIONS.md
+  wording and left as specified by PLAN.md.
+- **security-review — SUBSTITUTED, not skipped.** The skill does not exist in this
+  session's skill list. Manual equivalent performed: no secrets committed (only
+  `.env.example` files tracked); no `dangerouslySetInnerHTML`/`eval`/`innerHTML` in
+  frontend; query params are validated against in-memory code sets (no injection
+  surface, no SQL); CORS-all + 100 req/15 min/IP per CONVENTIONS.md; JSON terminal 404
+  and Express 5 arity-correct error handler.
