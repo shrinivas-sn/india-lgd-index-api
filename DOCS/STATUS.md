@@ -1,9 +1,10 @@
 <!-- docs-structure: v1 -->
 # STATUS
 
-**Current:** Release commit `61f833d` is on the public `main` branch of
+**Workspace:** `E:\lgd-admin-hierarchy-api` (`production-readiness` tracks public `main`).
+**Current:** Release and documentation commit `c6c13e0` is on the public `main` branch of
 [shrinivas-sn/india-lgd-index-api](https://github.com/shrinivas-sn/india-lgd-index-api).
-[GitHub CI passed](https://github.com/shrinivas-sn/india-lgd-index-api/actions/runs/35971206712).
+[GitHub CI passed](https://github.com/shrinivas-sn/india-lgd-index-api/actions/runs/35971472360).
 Render and Vercel deployment and public API listing have not happened.
 
 - Dataset: 36 states / 784 districts / 7,092 sub-districts / 7,338 blocks
@@ -15,7 +16,7 @@ Render and Vercel deployment and public API listing have not happened.
 - Frontend: Home / Playground / Docs / Status / 404; Home and Docs now prerender
   real HTML with canonical tags and sitemap. Production and preview builds pass
   locally; Vercel routing remains to be observed after deploy.
-- CI: push/PR checks passed on GitHub for `61f833d`; Monday 03:00 UTC ingest
+- CI: push/PR checks passed on GitHub for `c6c13e0`; Monday 03:00 UTC ingest
   is configured but has not run on GitHub. A repeated local ingest leaves data
   bytes and `ingested_at` unchanged. Render Blueprint and Vercel config are in Git.
 - README: full developer doc (endpoints, error table, data pipeline, local setup,
@@ -25,7 +26,7 @@ Render and Vercel deployment and public API listing have not happened.
   production-readiness PASS after fixing one confirmed bug (missing `trust proxy`),
   security-review substituted with a manual pass (skill unavailable) and logged as such.
 
-## If resuming
+## Next up (start here)
 
 Read root `PLAN.md` and its last Progress Log entry first. The 24/09/2026
 revalidation is in `DOCS/RESEARCH/RESEARCH.md`; it corrects the old “no LGD API”
@@ -33,9 +34,10 @@ claim and lists ingestion and request-validation gaps. The one-off
 `backend/scripts/probe-dupes.js` was removed; its finding is retained in
 `DOCS/CONTEXT/DECISIONS.md` and regression tests.
 
-1. Execute root `PLAN.md` from Phase 3 hosted checks, then import this repository
-   into Render and Vercel and validate both using `DOCS/DEPLOYMENT.md`.
-2. Owner confirmed noncommercial launch and Vercel Hobby eligibility. Render
-   compute choice and account access come after reviewable configuration and tests.
-3. Verify hosted cron, source freshness, browser journey, and failure recovery before
-   claiming the API is production-ready.
+1. When the owner resumes deployment, create the Render free Blueprint from
+   `render.yaml` in this repository and supply its HTTPS URL. Hosting account
+   access is unavailable in this workspace; the owner chose to do this later.
+2. Set Vercel `frontend/` project's `VITE_API_BASE_URL` to that Render origin.
+   Follow `DOCS/DEPLOYMENT.md` for import, smoke, SEO, and rollback checks.
+3. Observe hosted cron, source freshness, proxy IP behavior, browser routes,
+   cold start, and failure recovery before claiming production readiness.
