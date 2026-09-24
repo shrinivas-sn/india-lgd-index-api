@@ -4,8 +4,8 @@ This is an independent API for LGD data. The first public release uses a Vercel 
 
 ## Before deployment
 
-1. Publish this tested branch to a GitHub repository controlled by the owner. This checkout currently has no Git remote, so no hosted CI or deploy has run. Review the repo's public visibility and source attribution before publishing it.
-2. Confirm CI is green for the exact commit. `backend/npm test` must pass, `npm run check:snapshot` must report no errors, and the `frontend/` build must pass. Keep `backend/data/` tracked; Render builds and serves that exact revision.
+1. The tested release is public at [shrinivas-sn/india-lgd-index-api](https://github.com/shrinivas-sn/india-lgd-index-api), on `main` at commit `61f833d`. Review source attribution before any further public listing.
+2. [GitHub CI passed](https://github.com/shrinivas-sn/india-lgd-index-api/actions/runs/35971206712) for that exact commit. Keep `backend/data/` tracked; Render builds and serves the selected revision.
 3. Review `render.yaml`. It selects one free Node web service and runs backend tests during its build. A paid plan requires an explicit plan edit and cost review; the API code has no paid dependency.
 
 ## Render API
@@ -43,4 +43,4 @@ Record the exact URLs, commit hashes, date, smoke output, `/freshness` response,
 
 ## Release limits
 
-The local suite and static build pass, but no hosted CI, Render proxy observation, Vercel route response, real cold-start measurement, or live rollback has happened yet. Avoid claiming production readiness or an uptime guarantee until those checks are recorded. A public API directory listing is a separate owner publication decision.
+The local suite, static build, and hosted GitHub CI pass. Render proxy observation, Vercel route response, real cold-start measurement, and live rollback have not happened yet. Avoid claiming production readiness or an uptime guarantee until those checks are recorded. A public API directory listing is a separate owner publication decision.

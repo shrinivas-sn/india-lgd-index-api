@@ -219,3 +219,11 @@ Verified:   `npm test` under `backend/`: 39 pass, 0 fail; `npm run check:snapsho
 Surprises:  This checkout has no Git remote, so hosted CI and account deployment cannot be verified locally. The Vite production bundle is about 198 kB gzip and still warns on chunk size. Render proxy hops, Vercel routing, cold start, and rollback require live checks. Local preparation for Tasks 3.1–3.3 is complete; their hosted verification boxes stay open.
 Next:       Commit the tested local work, connect the owner's GitHub repository, deploy Render then Vercel, and run public smoke/refresh/rollback checks. Record actual URLs and costs before claiming production readiness.
 Commit:     local readiness checkpoint (see Git history)
+
+### GitHub publication and hosted CI — 24/09/2026
+
+Done:       Connected the owner's empty public repository `shrinivas-sn/india-lgd-index-api`, pushed release commit `61f833d` to `main`, and confirmed the repository's default branch is `main`.
+Verified:   `git ls-remote origin refs/heads/main` returned `61f833d266723d674698cbfa1dd04f5db67fcf64`; GitHub Actions run `35971206712` completed with conclusion `success` for the same SHA. GitHub repository API reported `private: false`.
+Surprises:  The GitHub CLI's keyring token is invalid, though Git push authentication works. No Render or Vercel CLI/account token or connected deployment tool is available in this workspace. Their hosted checks remain open.
+Next:       Import the repository into Render from `render.yaml`, record its HTTPS origin, then import `frontend/` into Vercel with `VITE_API_BASE_URL` set to that origin. Run live smoke and browser/SEO checks and record evidence before marking Phase 3 or 4 complete.
+Commit:     documentation follow-up pending
