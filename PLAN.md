@@ -227,3 +227,11 @@ Verified:   `git ls-remote origin refs/heads/main` returned `61f833d266723d67469
 Surprises:  The GitHub CLI's keyring token is invalid, though Git push authentication works. No Render or Vercel CLI/account token or connected deployment tool is available in this workspace. Their hosted checks remain open.
 Next:       Import the repository into Render from `render.yaml`, record its HTTPS origin, then import `frontend/` into Vercel with `VITE_API_BASE_URL` set to that origin. Run live smoke and browser/SEO checks and record evidence before marking Phase 3 or 4 complete.
 Commit:     documentation follow-up pending
+
+### Deployment URL handoff check — 24/09/2026
+
+Done:       Clarified that `http://localhost:3000` is for local development only. The frontend now requires `VITE_API_BASE_URL` in production; its build check rejects a bundled local API origin. The Render-to-Vercel environment setting, rebuild, and live browser verification are explicit in `DOCS/DEPLOYMENT.md` and `DOCS/STATUS.md`.
+Verified:   `npm run build` in `frontend/` with test HTTPS API and site origins passed. Built Home HTML and JavaScript contained `https://example-api.onrender.com` and neither contained `localhost:3000`. `git diff --check` exited 0.
+Surprises:  The previous production bundle contained a development localhost fallback. A broad search also matched React Router's internal `http://localhost` base, so the build guard targets the API's `:3000` origin.
+Next:       After Render assigns its real HTTPS origin, set Vercel `VITE_API_BASE_URL` to it before deploy; verify browser requests and examples use it, then complete the remaining live checks.
+Commit:     URL handoff fix pending

@@ -9,6 +9,8 @@ The machine-readable [OpenAPI 3.1 contract](backend/openapi.v1.json) is also ser
 
 ## Quick start
 
+These examples use a backend running locally. After deployment, use the Render HTTPS origin in place of `http://localhost:3000`; the [deployment guide](DOCS/DEPLOYMENT.md) records how to connect the Vercel portal to it.
+
 ```bash
 curl http://localhost:3000/v1/states
 curl "http://localhost:3000/v1/districts?state=32"      # Kerala's 14 districts

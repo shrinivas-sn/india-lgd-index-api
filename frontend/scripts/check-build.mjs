@@ -11,8 +11,13 @@ const spa = fs.readFileSync(path.join(dist, 'spa.html'), 'utf8');
 const robots = fs.readFileSync(path.join(dist, 'robots.txt'), 'utf8');
 const config = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
 const preview = process.env.VERCEL_ENV === 'preview';
+const localApi = /(?:localhost|127\.0\.0\.1):3000/;
+for (const file of fs.readdirSync(path.join(dist, 'assets')).filter((name) => name.endsWith('.js'))) {
+  assert.ok(!localApi.test(fs.readFileSync(path.join(dist, 'assets', file), 'utf8')), `${file} contains a local API URL`);
+}
 
 for (const [name, html] of [['home', home], ['docs', docs]]) {
+  assert.ok(!localApi.test(html), `${name} contains a local API URL`);
   assert.match(html, /<div id="root"><[\s\S]*<h1[ >]/, `${name} needs rendered HTML`);
   assert.match(html, /<meta name="description" content="[^"]+"/);
   assert.match(html, /<script type="module" crossorigin src="\/assets\//);

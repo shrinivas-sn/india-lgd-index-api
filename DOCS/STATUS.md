@@ -14,8 +14,8 @@ Render and Vercel deployment and public API listing have not happened.
 - Tests: 39/39 (`npm test`, offline) after ingestion and API hardening;
   full curl sweep was green on 19/09/2026 after the trust-proxy fix.
 - Frontend: Home / Playground / Docs / Status / 404; Home and Docs now prerender
-  real HTML with canonical tags and sitemap. Production and preview builds pass
-  locally; Vercel routing remains to be observed after deploy.
+  real HTML with canonical tags and sitemap. The production bundle checks that
+  no local API URL ships; Vercel routing remains to be observed after deploy.
 - CI: push/PR checks passed on GitHub for `c6c13e0`; Monday 03:00 UTC ingest
   is configured but has not run on GitHub. A repeated local ingest leaves data
   bytes and `ingested_at` unchanged. Render Blueprint and Vercel config are in Git.
@@ -38,6 +38,7 @@ claim and lists ingestion and request-validation gaps. The one-off
    `render.yaml` in this repository and supply its HTTPS URL. Hosting account
    access is unavailable in this workspace; the owner chose to do this later.
 2. Set Vercel `frontend/` project's `VITE_API_BASE_URL` to that Render origin.
-   Follow `DOCS/DEPLOYMENT.md` for import, smoke, SEO, and rollback checks.
+   Redeploy and check that browser requests and copyable examples use Render,
+   never localhost. Follow `DOCS/DEPLOYMENT.md` for smoke, SEO, and rollback.
 3. Observe hosted cron, source freshness, proxy IP behavior, browser routes,
    cold start, and failure recovery before claiming production readiness.

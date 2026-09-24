@@ -20,9 +20,9 @@ Render deploys each new commit on the linked branch. Its build command runs test
 ## Vercel portal
 
 1. Import the same GitHub repository into the owner's Vercel account as a separate project. Set **Root Directory** to `frontend`, framework to Vite, and confirm `frontend/vercel.json` supplies `npm run build` and output `dist`.
-2. Set `VITE_API_BASE_URL` to the exact Render HTTPS origin, without a trailing path. This is a public browser URL, not a secret. The build fails when it is missing or not HTTPS.
+2. Before the first Vercel deploy, set `VITE_API_BASE_URL` in the Vercel project's Production environment to the exact Render HTTPS origin (for example, `https://YOUR-API.onrender.com`), without `/v1` or a trailing path. Set it for Preview too if previews should call the API. This public browser URL is not a secret. A production build fails when it is missing or not HTTPS; `localhost` is only a local development fallback. Changing this setting later requires a new Vercel deployment because Vite embeds it in built JavaScript.
 3. `SITE_URL` can be omitted for the host-provided domain because Vercel exposes `VERCEL_PROJECT_PRODUCTION_URL`. If a custom domain is later chosen, set `SITE_URL` to its HTTPS origin and redeploy. Verify that the emitted canonical links and sitemap use the actual production URL.
-4. Deploy the same tested commit after the API is reachable. Production builds include prerendered `/` and `/docs`, a two-page sitemap, and robots rules. Preview builds mark pages noindex and omit the sitemap. `/playground` and `/status` use the SPA fallback; unknown paths must return HTTP 404.
+4. Deploy the same tested commit after the API is reachable. Open Home and Docs and confirm the copyable API examples and OpenAPI link use the Render URL; check Playground and Status in browser network tools for requests to that same origin and no requests to `localhost`. Production builds include prerendered `/` and `/docs`, a two-page sitemap, and robots rules. Preview builds mark pages noindex and omit the sitemap. `/playground` and `/status` use the SPA fallback; unknown paths must return HTTP 404.
 
 ## Public verification
 
