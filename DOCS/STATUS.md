@@ -2,9 +2,9 @@
 # STATUS
 
 **Workspace:** `E:\lgd-admin-hierarchy-api` (`production-readiness` tracks public `main`).
-**Current:** Release and documentation commit `c6c13e0` is on the public `main` branch of
+**Current:** The release and URL handoff fix are on the public `main` branch of
 [shrinivas-sn/india-lgd-index-api](https://github.com/shrinivas-sn/india-lgd-index-api).
-[GitHub CI passed](https://github.com/shrinivas-sn/india-lgd-index-api/actions/runs/35971472360).
+[GitHub CI passed for the URL fix](https://github.com/shrinivas-sn/india-lgd-index-api/actions/runs/35975214861).
 Render and Vercel deployment and public API listing have not happened.
 
 - Dataset: 36 states / 784 districts / 7,092 sub-districts / 7,338 blocks
@@ -16,7 +16,7 @@ Render and Vercel deployment and public API listing have not happened.
 - Frontend: Home / Playground / Docs / Status / 404; Home and Docs now prerender
   real HTML with canonical tags and sitemap. The production bundle checks that
   no local API URL ships; Vercel routing remains to be observed after deploy.
-- CI: push/PR checks passed on GitHub for `c6c13e0`; Monday 03:00 UTC ingest
+- CI: push/PR checks passed on GitHub for URL fix `6e19704`; Monday 03:00 UTC ingest
   is configured but has not run on GitHub. A repeated local ingest leaves data
   bytes and `ingested_at` unchanged. Render Blueprint and Vercel config are in Git.
 - README: full developer doc (endpoints, error table, data pipeline, local setup,
