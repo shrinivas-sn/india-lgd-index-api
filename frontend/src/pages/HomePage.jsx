@@ -1,33 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
-import JsonViewer from '../components/JsonViewer';
 import CodeSnippet from '../components/CodeSnippet';
 import StatusBadge from '../components/StatusBadge';
 
-const COUNTS = [
-  { key: 'states', label: 'States & UTs' },
-  { key: 'districts', label: 'Districts' },
-  { key: 'subdistricts', label: 'Sub-districts' },
-  { key: 'blocks', label: 'Blocks' }
-];
-
 export default function HomePage() {
-  const [meta, setMeta] = useState(null);
-
-  useEffect(() => {
-    let alive = true;
-    fetch(`${API_BASE_URL}/`)
-      .then((res) => res.json())
-      .then((json) => {
-        if (alive) setMeta(json.attribution);
-      })
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
-  }, []);
-
   return (
     <div className="page">
       <section className="hero">
@@ -35,7 +12,7 @@ export default function HomePage() {
         <p className="lede">
           Every state, district, sub-district and development block in India — with the official
           Local Government Directory codes — served keyless, with CORS enabled, straight from the
-          Ministry&rsquo;s weekly data. No signup, no API key, no charge.
+          LGD data through an independent community mirror. No signup, no API key, no charge.
         </p>
         <div className="btn-row">
           <Link to="/playground" className="btn btn-primary">
@@ -45,15 +22,6 @@ export default function HomePage() {
             Read the docs
           </Link>
         </div>
-      </section>
-
-      <section className="stat-strip" aria-label="Dataset size">
-        {COUNTS.map((c) => (
-          <div className="stat" key={c.key}>
-            <div className="stat-num">—</div>
-            <div className="stat-label">{c.label}</div>
-          </div>
-        ))}
       </section>
 
       <StatusBadge />
@@ -91,11 +59,9 @@ export default function HomePage() {
 
       <h2>Zero to first request</h2>
       <p className="lede">
-        Point any HTTP client at the API — the browser is enough. The snippet below hits the live
-        endpoint; the JSON viewer shows the exact response.
+        Send this request from any HTTP client, or open the Playground to inspect a live response.
       </p>
       <CodeSnippet url={`${API_BASE_URL}/v1/states`} />
-      <JsonViewer data={meta} label="Root endpoint · attribution payload" />
     </div>
   );
 }

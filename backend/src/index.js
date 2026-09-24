@@ -2,15 +2,20 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const crypto = require('crypto');
 
 const { getStates } = require('./controllers/states');
 const { getDistricts } = require('./controllers/districts');
 const { getSubdistricts, getBlocks } = require('./controllers/levels');
 const { search } = require('./controllers/search');
-const { sendError } = require('./validators');
+const { sendError, validateQuery } = require('./validators');
+const openapi = require('../openapi.v1.json');
+const db = require('./db');
+const { assessFreshness } = require('./freshness');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.disable('x-powered-by');
 
 // PaaS deploys (Render/Railway) terminate TLS at a proxy that sets
 // X-Forwarded-For. Without this, express-rate-limit v8 raises
@@ -18,8 +23,22 @@ const PORT = process.env.PORT || 3000;
 // clients under the proxy IP. One trusted hop; never 'true' (permissive).
 app.set('trust proxy', 1);
 
+app.use((req, res, next) => {
+  const requestId = crypto.randomUUID();
+  const started = performance.now();
+  res.set('X-Request-Id', requestId);
+  res.on('finish', () => {
+    if (process.env.NODE_ENV === 'production') {
+      console.log(JSON.stringify({ request_id: requestId, method: req.method, path: req.path,
+        status: res.statusCode, duration_ms: Math.round(performance.now() - started),
+        rate_limited: res.statusCode === 429 }));
+    }
+  });
+  if (req.originalUrl.length > 2048) return sendError(res, 'URI_TOO_LONG', 'Request URL exceeds 2048 characters.', 414);
+  next();
+});
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '1kb' }));
 
 // Decision 10: 100 requests / 15 min / IP (CONVENTIONS.md default).
 const apiLimiter = rateLimit({
@@ -42,10 +61,10 @@ app.use('/v1', apiLimiter);
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'Welcome to LGD India Administrative Hierarchy API v1',
+    message: 'Welcome to the independent India LGD Index API v1',
     data: {
       description:
-        'Official administrative hierarchy of India (states, districts, sub-districts, blocks) with government LGD codes, from the Ministry of Panchayati Raj Local Government Directory.',
+        'Independent API for Indian states, districts, sub-districts, and blocks using government LGD codes from the Ministry of Panchayati Raj Local Government Directory.',
       endpoints: {
         states: '/v1/states',
         districts: '/v1/districts?state=<state_code>',
@@ -65,13 +84,16 @@ app.get('/', (req, res) => {
 app.get('/v1', (req, res) => {
   res.redirect(307, '/');
 });
+app.get('/openapi.json', (req, res) => res.json(openapi));
+app.get('/healthz', (req, res) => res.set('Cache-Control', 'no-store').json({ status: 'ok' }));
+app.get('/freshness', (req, res) => res.set('Cache-Control', 'no-store').json(assessFreshness(db.meta.source_date)));
 
 // v1 API routes
-app.get('/v1/states', getStates);
-app.get('/v1/districts', getDistricts);
-app.get('/v1/subdistricts', getSubdistricts);
-app.get('/v1/blocks', getBlocks);
-app.get('/v1/search', search);
+app.get('/v1/states', validateQuery([]), getStates);
+app.get('/v1/districts', validateQuery(['state']), getDistricts);
+app.get('/v1/subdistricts', validateQuery(['state', 'district']), getSubdistricts);
+app.get('/v1/blocks', validateQuery(['state', 'district']), getBlocks);
+app.get('/v1/search', validateQuery(['q']), search);
 
 // Terminal 404 — JSON envelope, never Express's default HTML error page.
 app.use((req, res) => {
@@ -88,8 +110,8 @@ app.use((req, res) => {
 // Express 5 auto-forwards async throws/rejections and body-parse errors here.
 // Honors upstream status (e.g. 400 from malformed JSON), else 500.
 app.use((err, req, res, next) => {
-  console.error('Unhandled server error:', err);
   const status = err && (err.status || err.statusCode) ? err.status || err.statusCode : 500;
+  if (status === 500) console.error('Unhandled server error:', err?.message || 'unknown error');
   return sendError(
     res,
     status === 500 ? 'INTERNAL_SERVER_ERROR' : 'BAD_REQUEST',

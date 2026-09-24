@@ -65,7 +65,7 @@ test('GET /v1/districts?state=<valid> filters; unknown code -> 404 listing valid
   assert.ok(gj.meta.count > 0 && gj.meta.count < 784);
   for (const d of gj.data) assert.equal(d.state_code, '28');
 
-  const bad = await request('/v1/districts?state=ZZ');
+  const bad = await request('/v1/districts?state=999999');
   assert.equal(bad.status, 404);
   const bj = JSON.parse(bad.body);
   assert.equal(bj.success, false);
@@ -169,5 +169,39 @@ test('CORS header present on a real response; rate-limit headers present', async
   assert.equal(res.headers['access-control-allow-origin'], '*');
   assert.ok(res.headers['ratelimit-limit'] || res.headers['x-ratelimit-limit']);
   assert.ok(res.headers['ratelimit-remaining'] || res.headers['x-ratelimit-remaining']);
+});
+
+test('location filters must agree on the district parent state', async () => {
+  for (const level of ['subdistricts', 'blocks']) {
+    const good = await request(`/v1/${level}?state=30&district=551`);
+    assert.equal(good.status, 200);
+    assert.equal(JSON.parse(good.body).meta.state, '30');
+    const bad = await request(`/v1/${level}?state=28&district=551`);
+    assert.equal(bad.status, 400);
+    assert.equal(JSON.parse(bad.body).error.code, 'FILTER_MISMATCH');
+  }
+});
+
+test('query parameters reject duplicates, unknown names, and malformed codes', async () => {
+  for (const path of [
+    '/v1/states?anything=1',
+    '/v1/districts?state=28&state=30',
+    '/v1/blocks?district[]=551',
+    '/v1/subdistricts?state=',
+    '/v1/search?q=foo&q=bar',
+  ]) {
+    const response = await request(path);
+    assert.equal(response.status, 400, path);
+    assert.equal(JSON.parse(response.body).error.code, 'INVALID_QUERY_PARAM', path);
+  }
+});
+
+test('search rejects empty or overlong text', async () => {
+  const blank = await request('/v1/search?q=%20%20');
+  assert.equal(blank.status, 400);
+  assert.equal(JSON.parse(blank.body).error.code, 'MISSING_PARAM');
+  const long = await request(`/v1/search?q=${'x'.repeat(101)}`);
+  assert.equal(long.status, 400);
+  assert.equal(JSON.parse(long.body).error.code, 'INVALID_QUERY_PARAM');
 });
 

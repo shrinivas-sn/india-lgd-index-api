@@ -101,32 +101,6 @@ p { margin: 0 0 12px; }
 .hero { padding: 12px 0 32px; }
 .hero h1 { font-size: 2.4rem; }
 
-.stat-strip {
-  display: flex;
-  flex-wrap: wrap;
-  border-top: 1px solid var(--rule-strong);
-  border-bottom: 1px solid var(--rule-strong);
-  margin: 20px 0 28px;
-}
-
-.stat {
-  padding: 14px 22px;
-  border-right: 1px solid var(--rule);
-  min-width: 130px;
-}
-
-.stat:last-child { border-right: none; }
-
-.stat-num { font-family: var(--font-serif); font-size: 1.6rem; color: var(--ink-strong); line-height: 1.2; }
-
-.stat-label {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
 .btn {
   display: inline-block;
   border: 1px solid var(--ink-strong);

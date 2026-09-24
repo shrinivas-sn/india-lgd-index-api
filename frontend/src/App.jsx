@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
-import PlaygroundPage from './pages/PlaygroundPage';
 import DocsPage from './pages/DocsPage';
-import StatusPage from './pages/StatusPage';
 import NotFoundPage from './pages/NotFoundPage';
 
-export default function App() {
+const PlaygroundPage = React.lazy(() => import('./pages/PlaygroundPage'));
+const StatusPage = React.lazy(() => import('./pages/StatusPage'));
+
+export function AppContent() {
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
       <main>
+        <Suspense fallback={<div className="page">Loading…</div>}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/playground" element={<PlaygroundPage />} />
@@ -20,8 +22,13 @@ export default function App() {
           <Route path="/status" element={<StatusPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </Suspense>
       </main>
       <Footer />
-    </BrowserRouter>
+    </>
   );
+}
+
+export default function App() {
+  return <BrowserRouter><AppContent /></BrowserRouter>;
 }

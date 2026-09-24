@@ -7,6 +7,7 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "ingest": "node scripts/ingest.js",
+    "check:snapshot": "node scripts/check-snapshot.js",
     "test": "node --test"
   },
   "engines": {

@@ -9,6 +9,7 @@ const {
   parseCsv,
   normalizeRows,
   validateIntegrity,
+  validateHeaders,
   cleanCode,
 } = require('../scripts/transform');
 
@@ -92,7 +93,7 @@ test('validateIntegrity catches duplicate codes within a level', () => {
 test('block codes may repeat across districts (upstream LGD reality) without failing', () => {
   const f = buildFixture();
   // same block code in a different district — legitimate per live 19Sep2026 data
-  f.blocks.push({ code: '77001', name: 'Another Gangavaram', state_code: '28', district_code: '552' });
+  f.blocks.push({ code: '77001', name: 'Another Gangavaram', state_code: '30', district_code: '552' });
   const { errors } = validateIntegrity(f);
   assert.deepEqual(errors, []);
 });
@@ -109,4 +110,27 @@ test('validateIntegrity catches blank codes', () => {
   f.blocks.push({ code: '', name: 'No Code Block', state_code: '28', district_code: '551' });
   const { errors } = validateIntegrity(f);
   assert.ok(errors.some((e) => e.includes('missing/blank code')));
+});
+
+test('validateHeaders rejects a renamed required source column before normalization', () => {
+  const rows = parseCsv('State Code,State Display Name\n28,Andhra Pradesh\n');
+  assert.ok(validateHeaders(rows, 'states').some((error) => error.includes('name')));
+});
+
+test('validateIntegrity rejects blank names and nonnumeric codes', () => {
+  const f = buildFixture();
+  f.states[0].name = '';
+  f.districts[0].code = 'district-551';
+  const { errors } = validateIntegrity(f);
+  assert.ok(errors.some((error) => error.includes('blank name')));
+  assert.ok(errors.some((error) => error.includes('nonnumeric code')));
+});
+
+test('validateIntegrity rejects a child whose district belongs to another state', () => {
+  const f = buildFixture();
+  f.subdistricts[0].state_code = '30';
+  f.blocks[0].state_code = '30';
+  const { errors } = validateIntegrity(f);
+  assert.ok(errors.some((error) => error.includes('district/state mismatch') && error.includes('subdistricts')));
+  assert.ok(errors.some((error) => error.includes('district/state mismatch') && error.includes('blocks')));
 });

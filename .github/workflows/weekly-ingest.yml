@@ -1,5 +1,5 @@
 # Weekly LGD ingestion (Decision 4: weekly cron, commit only on real diffs).
-# Upstream publishes daily; boundary changes are infrequent, so weekly is enough.
+# The mirror currently publishes dated assets frequently; alert on stale sets.
 # Runs the ingest script, then commits backend/data/ only if it actually changed,
 # with a changelog-style message showing per-level row-count deltas.
 name: weekly-ingest
@@ -42,7 +42,18 @@ jobs:
       # against the freshly ingested files before anything is committed).
       - name: Run tests
         working-directory: backend
-        run: npm test
+        run: |
+          npm test
+          node scripts/check-snapshot.js --strict-freshness
+
+      - name: Report snapshot
+        if: always()
+        run: |
+          if [ -f backend/data/meta.json ]; then
+            jq -r '"Source date: \(.source_date)\nCounts: \(.row_counts)\nAssets: \(.source_assets | to_entries | map("\(.key)=\(.value.sha256)") | join(", "))"' backend/data/meta.json >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "Revision: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Job result: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Commit only if data actually changed
         run: |

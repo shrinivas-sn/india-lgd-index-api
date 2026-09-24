@@ -69,8 +69,8 @@ function parseCsv(text) {
 // spacing variants the upstream files actually use into one lookup.
 const norm = (h) => h.toLowerCase().replace(/\s+/g, '');
 
-// Explicit per-file column maps (verified 05/09/2026 against the real files —
-// see PLAN.md's header table). Anything not mapped is deliberately dropped
+// Explicit per-file column maps (verified 05/09/2026 against the real files).
+// Anything not mapped is deliberately dropped
 // (S.No., version columns, redundant name columns).
 const HEADER_MAPS = {
   states: {
@@ -101,6 +101,24 @@ const HEADER_MAPS = {
   },
 };
 
+const REQUIRED_FIELDS = {
+  states: ['code', 'name'],
+  districts: ['code', 'name', 'state_code'],
+  subdistricts: ['code', 'name', 'state_code', 'district_code'],
+  blocks: ['code', 'name', 'state_code', 'district_code'],
+};
+
+function validateHeaders(rawRows, level) {
+  if (!HEADER_MAPS[level]) throw new Error(`Unknown LGD level: ${level}`);
+  if (rawRows.length === 0) return [`${level}: no source rows or headers`];
+  const present = new Set(
+    Object.keys(rawRows[0]).map((header) => HEADER_MAPS[level][norm(header)]).filter(Boolean)
+  );
+  return REQUIRED_FIELDS[level]
+    .filter((field) => !present.has(field))
+    .map((field) => `${level}: missing required source header for ${field}`);
+}
+
 // Source values sometimes arrive as float artifacts ("28.0") or padded (" 28 ").
 // Codes stay strings; only a trailing ".0" from float coercion is stripped.
 function cleanCode(value) {
@@ -130,7 +148,7 @@ function remap(rows, level) {
 
 /**
  * Normalizes raw CSV rows for one level into the internal schema
- * (PLAN.md Phase 1): strings, trimmed, cleaned codes, undefined fields omitted.
+ * Strings, trimmed text, cleaned codes, undefined fields omitted.
  */
 function normalizeRows(rawRows, level) {
   return remap(rawRows, level).map((r) => {
@@ -167,6 +185,22 @@ function normalizeRows(rawRows, level) {
 function validateIntegrity({ states, districts, subdistricts, blocks }) {
   const errors = [];
 
+  const checkFields = (rows, level) => {
+    for (const row of rows) {
+      if (row.code && !/^\d+$/.test(row.code)) {
+        errors.push(`${level}: nonnumeric code "${row.code}"`);
+      }
+      if (!row.name || !row.name.trim()) {
+        errors.push(`${level}: row with blank name (code: ${row.code || '?'})`);
+      }
+    }
+  };
+
+  checkFields(states, 'states');
+  checkFields(districts, 'districts');
+  checkFields(subdistricts, 'subdistricts');
+  checkFields(blocks, 'blocks');
+
   const checkUnique = (rows, level) => {
     const seen = new Set();
     for (const row of rows) {
@@ -185,6 +219,7 @@ function validateIntegrity({ states, districts, subdistricts, blocks }) {
 
   const stateCodes = checkUnique(states, 'states');
   const districtCodes = checkUnique(districts, 'districts');
+  const districtsByCode = new Map(districts.map((district) => [district.code, district]));
   checkUnique(subdistricts, 'subdistricts');
   // Block codes are NOT nationally unique in the LGD source itself — the same
   // block code is legitimately reused for distinct blocks in different
@@ -216,6 +251,8 @@ function validateIntegrity({ states, districts, subdistricts, blocks }) {
     }
     if (!districtCodes.has(row.district_code)) {
       errors.push(`subdistricts: "${row.name}" (${row.code}) has orphan district_code "${row.district_code}"`);
+    } else if (districtsByCode.get(row.district_code).state_code !== row.state_code) {
+      errors.push(`subdistricts: "${row.name}" (${row.code}) district/state mismatch`);
     }
   }
   for (const row of blocks) {
@@ -224,6 +261,8 @@ function validateIntegrity({ states, districts, subdistricts, blocks }) {
     }
     if (!districtCodes.has(row.district_code)) {
       errors.push(`blocks: "${row.name}" (${row.code}) has orphan district_code "${row.district_code}"`);
+    } else if (districtsByCode.get(row.district_code).state_code !== row.state_code) {
+      errors.push(`blocks: "${row.name}" (${row.code}) district/state mismatch`);
     }
   }
 
@@ -240,6 +279,7 @@ module.exports = {
   parseCsv,
   HEADER_MAPS,
   normalizeRows,
+  validateHeaders,
   validateIntegrity,
   cleanCode,
   norm,

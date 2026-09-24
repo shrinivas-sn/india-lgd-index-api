@@ -1,21 +1,22 @@
 <!-- docs-structure: v1 -->
 # STATUS
 
-**Current:** COMPLETE (19/09/2026). Every "Done means" criterion in PLAN.md was met, so
-`PLAN.md` was deleted per its own header rule. Backend, portal, weekly ingestion, and
-quality gates are all done and committed. Deploy and public-apis submission were
-explicitly OUT of scope (user-gated).
+**Current:** Local build completed 19/09/2026; production work reopened 24/09/2026
+in the new root `PLAN.md`. The original completed `PLAN.md` was deleted after its
+build criteria were met. Deployment and public listing have not happened.
 
 - Dataset: 36 states / 784 districts / 7,092 sub-districts / 7,338 blocks
-  (`19Sep2026` snapshot), integrity-checked, deterministic pipeline.
+  (`23Sep2026` snapshot), integrity-checked, deterministic pipeline.
 - Backend: 5 v1 endpoints + root health check, CONVENTIONS.md envelopes, CORS-all,
   rate limit 100/15min/IP with `trust proxy 1` (PaaS-safe), JSON 404 + error handler.
-- Tests: 19/19 (`npm test`, offline); full curl sweep green on 19/09/2026 after the
-  trust-proxy fix, including a request carrying `X-Forwarded-For`.
-- Frontend: Home / Playground / Docs / Status / 404, production build clean, Playground
-  round-trips live backend behavior (200 / 400 / 404 / search grouping).
-- CI: `.github/workflows/weekly-ingest.yml` — Mondays 03:00 UTC, commits only on real
-  data diffs with row-count changelog messages.
+- Tests: 39/39 (`npm test`, offline) after ingestion and API hardening;
+  full curl sweep was green on 19/09/2026 after the trust-proxy fix.
+- Frontend: Home / Playground / Docs / Status / 404; Home and Docs now prerender
+  real HTML with canonical tags and sitemap. Production and preview builds pass
+  locally; Vercel routing remains to be observed after deploy.
+- CI: push/PR checks and Monday 03:00 UTC ingest are configured. Hosted execution
+  remains unverified; a repeated local ingest leaves data bytes and `ingested_at`
+  unchanged. Render Blueprint and Vercel project config are prepared locally.
 - README: full developer doc (endpoints, error table, data pipeline, local setup,
   GODL attribution) — every number taken from live verified output.
 - Quality gates (attempt logs in `DOCS/CONTEXT/DECISIONS.md`): no-ai-slop PASS
@@ -25,10 +26,15 @@ explicitly OUT of scope (user-gated).
 
 ## If resuming
 
-1. Deploy: needs the user's Render account and explicit go-ahead. `backend/` is
-   deploy-ready (Node >=20, `trust proxy` set, `npm start`).
-2. Optional: browser click-through of the portal golden path when a browser tool is
-   available (the only unchecked item from the gates).
-3. Data freshness is now the GitHub cron's job; verify via `meta.source_date` if the
-   upstream mirror moves.
+Read root `PLAN.md` and its last Progress Log entry first. The 24/09/2026
+revalidation is in `DOCS/RESEARCH/RESEARCH.md`; it corrects the old “no LGD API”
+claim and lists ingestion and request-validation gaps. The one-off
+`backend/scripts/probe-dupes.js` was removed; its finding is retained in
+`DOCS/CONTEXT/DECISIONS.md` and regression tests.
 
+1. Execute root `PLAN.md` from Phase 3 hosted checks, then deploy and validate
+   Render backend and Vercel frontend using `DOCS/DEPLOYMENT.md`.
+2. Owner confirmed noncommercial launch and Vercel Hobby eligibility. Render
+   compute choice and account access come after reviewable configuration and tests.
+3. Verify hosted cron, source freshness, browser journey, and failure recovery before
+   claiming the API is production-ready.

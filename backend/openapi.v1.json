@@ -1,0 +1,105 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "India LGD Index API",
+    "version": "1.0.0",
+    "description": "Independent, free, keyless read API for India Local Government Directory codes. Data originates with the Ministry of Panchayati Raj and is ingested from a community mirror under GODL-India. No signup or API key is required. Requests are limited to 100 per 15 minutes per IP."
+  },
+  "paths": {
+    "/v1/states": {
+      "get": {
+        "summary": "List all states and union territories",
+        "operationId": "listStates",
+        "responses": {
+          "200": { "$ref": "#/components/responses/States" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/v1/districts": {
+      "get": {
+        "summary": "List districts, optionally within a state",
+        "operationId": "listDistricts",
+        "parameters": [{ "$ref": "#/components/parameters/State" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Districts" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/UnknownCode" },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/v1/subdistricts": {
+      "get": {
+        "summary": "List sub-districts by district or state",
+        "description": "At least one filter is required. If both are supplied, the district must belong to the state. A block is not a child of a sub-district.",
+        "operationId": "listSubdistricts",
+        "parameters": [{ "$ref": "#/components/parameters/State" }, { "$ref": "#/components/parameters/District" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Subdistricts" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/UnknownCode" },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/v1/blocks": {
+      "get": {
+        "summary": "List development blocks by district or state",
+        "description": "At least one filter is required. If both are supplied, the district must belong to the state. Block codes can repeat across districts; use state, district, and code together as the identity.",
+        "operationId": "listBlocks",
+        "parameters": [{ "$ref": "#/components/parameters/State" }, { "$ref": "#/components/parameters/District" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Blocks" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/UnknownCode" },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/v1/search": {
+      "get": {
+        "summary": "Search names across all four levels",
+        "operationId": "searchNames",
+        "parameters": [{ "name": "q", "in": "query", "required": true, "description": "Case-insensitive substring, 1–100 characters. Single value only.", "schema": { "type": "string", "minLength": 1, "maxLength": 100 } }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/Search" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "State": { "name": "state", "in": "query", "required": false, "description": "A single numeric LGD state code.", "schema": { "type": "string", "pattern": "^[0-9]+$" } },
+      "District": { "name": "district", "in": "query", "required": false, "description": "A single numeric LGD district code.", "schema": { "type": "string", "pattern": "^[0-9]+$" } }
+    },
+    "schemas": {
+      "State": { "type": "object", "required": ["code", "name"], "properties": { "code": { "type": "string" }, "name": { "type": "string" }, "name_local": { "type": "string" }, "type": { "type": "string" }, "census_2001_code": { "type": "string" }, "census_2011_code": { "type": "string" } } },
+      "District": { "type": "object", "required": ["code", "name", "state_code"], "properties": { "code": { "type": "string" }, "name": { "type": "string" }, "state_code": { "type": "string" } } },
+      "Subdistrict": { "type": "object", "required": ["code", "name", "state_code", "district_code"], "properties": { "code": { "type": "string" }, "name": { "type": "string" }, "state_code": { "type": "string" }, "district_code": { "type": "string" } } },
+      "Block": { "type": "object", "required": ["code", "name", "state_code", "district_code"], "properties": { "code": { "type": "string" }, "name": { "type": "string" }, "state_code": { "type": "string" }, "district_code": { "type": "string" } } },
+      "SearchHit": { "type": "object", "required": ["level", "code", "name"], "properties": { "level": { "type": "string", "enum": ["states", "districts", "subdistricts", "blocks"] }, "code": { "type": "string" }, "name": { "type": "string" }, "state_code": { "type": "string" }, "district_code": { "type": "string" }, "name_local": { "type": "string" } } },
+      "Attribution": { "type": "object", "required": ["source", "lgd_url", "data_mirror_url", "license"], "properties": { "source": { "type": "string" }, "lgd_url": { "type": "string", "format": "uri" }, "data_mirror_url": { "type": "string", "format": "uri" }, "license": { "type": "string", "const": "GODL-India" } } },
+      "Meta": { "type": "object", "required": ["count", "source_date", "ingested_at", "attribution"], "properties": { "count": { "type": "integer", "minimum": 0 }, "source_date": { "type": "string", "description": "The source snapshot date in DDMonYYYY format." }, "ingested_at": { "type": "string", "format": "date-time" }, "state": { "type": "string" }, "district": { "type": "string" }, "attribution": { "$ref": "#/components/schemas/Attribution" } } },
+      "StatesEnvelope": { "type": "object", "required": ["success", "data", "meta"], "properties": { "success": { "const": true }, "data": { "type": "array", "items": { "$ref": "#/components/schemas/State" } }, "meta": { "$ref": "#/components/schemas/Meta" } } },
+      "DistrictsEnvelope": { "type": "object", "required": ["success", "data", "meta"], "properties": { "success": { "const": true }, "data": { "type": "array", "items": { "$ref": "#/components/schemas/District" } }, "meta": { "$ref": "#/components/schemas/Meta" } } },
+      "SubdistrictsEnvelope": { "type": "object", "required": ["success", "data", "meta"], "properties": { "success": { "const": true }, "data": { "type": "array", "items": { "$ref": "#/components/schemas/Subdistrict" } }, "meta": { "$ref": "#/components/schemas/Meta" } } },
+      "BlocksEnvelope": { "type": "object", "required": ["success", "data", "meta"], "properties": { "success": { "const": true }, "data": { "type": "array", "items": { "$ref": "#/components/schemas/Block" } }, "meta": { "$ref": "#/components/schemas/Meta" } } },
+      "SearchEnvelope": { "type": "object", "required": ["success", "data", "meta"], "properties": { "success": { "const": true }, "data": { "type": "object", "required": ["query", "results"], "properties": { "query": { "type": "string" }, "results": { "type": "object", "required": ["states", "districts", "subdistricts", "blocks"], "properties": { "states": { "type": "array", "items": { "$ref": "#/components/schemas/SearchHit" } }, "districts": { "type": "array", "items": { "$ref": "#/components/schemas/SearchHit" } }, "subdistricts": { "type": "array", "items": { "$ref": "#/components/schemas/SearchHit" } }, "blocks": { "type": "array", "items": { "$ref": "#/components/schemas/SearchHit" } } } } } }, "meta": { "allOf": [{ "$ref": "#/components/schemas/Meta" }, { "type": "object", "required": ["total", "truncated", "match_limit_per_level"], "properties": { "total": { "type": "integer" }, "truncated": { "type": "object", "required": ["states", "districts", "subdistricts", "blocks"], "properties": { "states": { "type": "boolean" }, "districts": { "type": "boolean" }, "subdistricts": { "type": "boolean" }, "blocks": { "type": "boolean" } } }, "match_limit_per_level": { "const": 50 } } }] } } },
+      "Error": { "type": "object", "required": ["success", "error"], "properties": { "success": { "const": false }, "error": { "type": "object", "required": ["code", "message"], "properties": { "code": { "type": "string", "enum": ["MISSING_PARAM", "INVALID_QUERY_PARAM", "FILTER_MISMATCH", "INVALID_STATE_CODE", "INVALID_DISTRICT_CODE", "ENDPOINT_NOT_FOUND", "TOO_MANY_REQUESTS", "URI_TOO_LONG", "BAD_REQUEST", "INTERNAL_SERVER_ERROR"] }, "message": { "type": "string" } } } } }
+    },
+    "responses": {
+      "States": { "description": "All states and union territories.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/StatesEnvelope" } } } },
+      "Districts": { "description": "District rows.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DistrictsEnvelope" } } } },
+      "Subdistricts": { "description": "Sub-district rows.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SubdistrictsEnvelope" } } } },
+      "Blocks": { "description": "Development block rows.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BlocksEnvelope" } } } },
+      "Search": { "description": "Grouped results; each group returns at most 50 rows. `meta.truncated` indicates additional matches.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SearchEnvelope" } } } },
+      "BadRequest": { "description": "Missing, malformed, repeated, unknown, or conflicting query parameters.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "UnknownCode": { "description": "Well-formed numeric code not present in the snapshot.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "RateLimited": { "description": "100 requests per 15 minutes per client IP. Retry when the window resets.", "headers": { "RateLimit-Limit": { "schema": { "type": "string" } }, "RateLimit-Remaining": { "schema": { "type": "string" } }, "RateLimit-Reset": { "schema": { "type": "string" } }, "Retry-After": { "schema": { "type": "string" } } }, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+    }
+  }
+}

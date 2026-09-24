@@ -1,5 +1,30 @@
 # Candidate: LGD (Local Government Directory) India Administrative Hierarchy API
 
+## Revalidation — 24/09/2026
+
+The original duplication finding below is historical and is too absolute today. The [government LGD catalog](https://www.data.gov.in/catalog/local-government-directory-lgd) now labels its states, districts, and sub-districts resources “Data API” and describes a monthly update. The [data.gov.in help page](https://www.data.gov.in/help) says registered users generate API keys to access API URLs. A public LGD API therefore exists; the useful distinction for this project is a documented, keyless, cross-level API with a stable developer contract. The catalog does not list development blocks among its seven resources. Whether each linked API currently returns usable records still needs a direct request with a registered key; no key was available in this review.
+
+The [Ministry LGD page](https://panchayat.gov.in/en/lgd/) confirms the directory and LGD codes are government-maintained. The [government catalog](https://www.data.gov.in/catalog/local-government-directory-lgd) names the Ministry as contributor. [GODL-India](https://www.data.gov.in/Godl) permits reuse with source/license attribution and non-endorsement; the README and API must avoid suggesting this independent project is official. This is a research assessment, not a legal opinion.
+
+The local `19Sep2026` snapshot contains 36 states/UTs, 784 districts, 7,092 sub-districts, and 7,338 blocks. On 24/09/2026, all codes were numeric strings, no names were blank, all sub-district/block district codes existed, and their state codes matched the district's state. Fifteen block codes repeat nationally; the codebase correctly scopes their uniqueness to `(state,district,code)`. These checks establish internal consistency of this snapshot, not agreement with the latest official source.
+
+Current validation gaps found in code: `validateIntegrity` checks parent existence but not parent-state agreement, blank names, unexpected schema/header changes, source-date age, or anomalous row-count drops. `discoverFiles` sorts `DDMonYYYY` filenames as text, which does not choose the newest file across months or years. The ingestion script rewrites `meta.ingested_at` on every run, so the scheduled workflow may commit a timestamp-only diff while claiming a data change. The API silently gives `district` priority when `district` and an unrelated `state` are both supplied. Search truncation can be marked true on exactly 50 matches even when no further match exists. These are production-plan items, not fixes completed in this session.
+
+The project uses [ramSeraph/opendata's LGD release](https://github.com/ramSeraph/opendata/releases/tag/lgd-latest-extra1) as an intermediary. Its refresh timing and the GitHub Actions cron must be verified from real runs before promising an update SLA. The existing research claim that no API exists, and its inferred update cadence, should not be reused in public copy.
+
+### Source comparison observed 24/09/2026
+
+The [mirror release API](https://api.github.com/repos/ramSeraph/opendata/releases/tags/lgd-latest-extra1) returned 983 assets, including a coherent `23Sep2026` set for all four levels. A read-only download/extract/normalize comparison with committed `19Sep2026` data found:
+
+| Level | Archive SHA-256 | Rows | Added | Removed | Changed |
+|---|---|---:|---:|---:|---:|
+| states | `2a5945176f1b267bc3cef30d22600173fb42ee7a1a9a09a8e2acde799bffca6d` | 36 | 0 | 0 | 0 |
+| districts | `999821622c409d9005fd14ab8ab1632eef63b181160276b76b1d0edd94117149` | 784 | 0 | 0 | 0 |
+| subdistricts | `93e0a1e1f9f618d26c964e56e6ae3157fdc96f1116213d5ed52b65ad1f5f6664` | 7,092 | 0 | 0 | 1 |
+| blocks | `33077ce2f7ad101b71630ccf80bace82e797cf068369feab066ad4a04bb1305b` | 7,338 | 0 | 0 | 0 |
+
+The changed row is sub-district code `4197`, state `27`, district `490`: `Velhe` → `Rajgad`. The archives were extracted in a temporary directory and the committed dataset was not modified. The [government catalog](https://www.data.gov.in/catalog/local-government-directory-lgd) advertises monthly resources, while the [LGD directory download page](https://lgdirectory.gov.in/demo/downloadDirectory.do) presents a CAPTCHA. The catalog's API workflow requires registration/API-key generation according to [data.gov.in help](https://www.data.gov.in/help). This review therefore confirms the mirror's current assets and the local difference, but does not independently compare every row with a direct Ministry export. Continue to label the mirror as an intermediary and keep this limit visible in provenance.
+
 Date: 2026-08-09 (revised 2026-08-09 — see "Correction" below)
 Researched by: api-idea-scout (discovery mode)
 

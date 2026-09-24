@@ -86,29 +86,28 @@ function getBlocks({ stateCode, districtCode } = {}) {
 // responses; capped groups are flagged so callers know the list was cut.
 const SEARCH_MATCH_LIMIT = 50;
 
-function search(query) {
+function collectMatches(rows, query, limit = SEARCH_MATCH_LIMIT) {
+  const found = [];
   const q = query.toLowerCase();
-  const groups = { states: [], districts: [], subdistricts: [], blocks: [] };
-  const truncated = { states: false, districts: false, subdistricts: false, blocks: false };
-
-  const collect = (rows, key) => {
-    for (const row of rows) {
-      if (groups[key].length >= SEARCH_MATCH_LIMIT) {
-        truncated[key] = true;
-        break;
-      }
-      const name = row.name.toLowerCase();
-      const nameLocal = row.name_local ? row.name_local.toLowerCase() : '';
-      if (name.includes(q) || nameLocal.includes(q)) {
-        groups[key].push({ level: key, ...row });
-      }
+  for (const row of rows) {
+    const name = row.name.toLowerCase();
+    const nameLocal = row.name_local ? row.name_local.toLowerCase() : '';
+    if (name.includes(q) || nameLocal.includes(q)) {
+      if (found.length === limit) return { rows: found, truncated: true };
+      found.push(row);
     }
-  };
+  }
+  return { rows: found, truncated: false };
+}
 
-  collect(states, 'states');
-  collect(districts, 'districts');
-  collect(subdistricts, 'subdistricts');
-  collect(blocks, 'blocks');
+function search(query) {
+  const groups = {};
+  const truncated = {};
+  for (const [key, rows] of Object.entries({ states, districts, subdistricts, blocks })) {
+    const result = collectMatches(rows, query);
+    groups[key] = result.rows.map((row) => ({ level: key, ...row }));
+    truncated[key] = result.truncated;
+  }
 
   const total =
     groups.states.length +
@@ -128,6 +127,7 @@ module.exports = {
   getSubdistricts,
   getBlocks,
   search,
+  collectMatches,
   meta,
   SEARCH_MATCH_LIMIT,
 };

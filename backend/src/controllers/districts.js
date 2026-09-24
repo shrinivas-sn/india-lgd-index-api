@@ -8,7 +8,7 @@ const { baseMeta } = require('../meta');
  * state codes in the message (CONVENTIONS.md rule).
  */
 function getDistricts(req, res) {
-  const stateCode = req.query.state;
+  const stateCode = req.validatedQuery.state;
   if (stateCode !== undefined && !db.isValidStateCode(stateCode)) {
     return sendError(
       res,

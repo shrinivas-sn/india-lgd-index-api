@@ -9,7 +9,7 @@ const { baseMeta } = require('../meta');
  * grouped by level and each row carries its parent chain for disambiguation.
  */
 function search(req, res) {
-  const q = req.query.q;
+  const q = req.validatedQuery.q;
   if (q === undefined || String(q).trim() === '') {
     return sendError(res, 'MISSING_PARAM', 'Required query parameter "q" is missing or empty.', 400);
   }

@@ -5,6 +5,9 @@ import { API_BASE_URL } from '../config';
 
 const ERROR_CODES = [
   { code: 'MISSING_PARAM', http: 400, when: 'A required query parameter is absent or empty.' },
+  { code: 'INVALID_QUERY_PARAM', http: 400, when: 'An unknown, repeated, empty, or malformed query parameter.' },
+  { code: 'FILTER_MISMATCH', http: 400, when: 'The district does not belong to the supplied state.' },
+  { code: 'URI_TOO_LONG', http: 414, when: 'The request URL exceeds 2,048 characters.' },
   { code: 'INVALID_STATE_CODE', http: 404, when: 'A ?state value that is not a valid LGD state code.' },
   {
     code: 'INVALID_DISTRICT_CODE',
@@ -22,6 +25,11 @@ export default function DocsPage() {
       <p className="lede">
         Five GET endpoints, one JSON envelope shape, no authentication. No API key, CORS open, rate
         limit 100 requests per 15 minutes per IP.
+      </p>
+      <p>
+        <a href={`${API_BASE_URL}/openapi.json`} target="_blank" rel="noreferrer">
+          OpenAPI 3.1 JSON contract
+        </a>
       </p>
 
       <h2>Endpoints</h2>
@@ -58,7 +66,7 @@ export default function DocsPage() {
               <span className="code-chip">?district</span> or{' '}
               <span className="code-chip">?state</span> (one required)
             </td>
-            <td>Sub-districts (tehsils). Omitting both filters returns 400.</td>
+            <td>Sub-districts (tehsils). Omitting both filters returns 400. If both are used, they must agree.</td>
           </tr>
           <tr>
             <td>
@@ -68,7 +76,7 @@ export default function DocsPage() {
               <span className="code-chip">?district</span> or{' '}
               <span className="code-chip">?state</span> (one required)
             </td>
-            <td>Development blocks. Omitting both filters returns 400.</td>
+            <td>Development blocks. Omitting both filters returns 400. If both are used, they must agree.</td>
           </tr>
           <tr>
             <td>
@@ -79,7 +87,7 @@ export default function DocsPage() {
             </td>
             <td>
               Case-insensitive substring match across all four levels, grouped by level, each row
-              carrying its parent chain. Capped at 50 matches per level with a{' '}
+              carrying its parent chain. Query text is 1–100 characters. Capped at 50 matches per level with a{' '}
               <span className="code-chip">truncated</span> flag.
             </td>
           </tr>
@@ -98,8 +106,8 @@ export default function DocsPage() {
           data: [{ code: '18', name: 'WEST BENGAL' }],
           meta: {
             count: 1,
-            source_date: '19Sep2026',
-            ingested_at: '2026-09-19T…',
+            source_date: '23Sep2026',
+            ingested_at: '2026-09-24T…',
             attribution: { source: 'Ministry of Panchayati Raj — LGD', license: 'GODL-India' }
           }
         }}
@@ -138,14 +146,14 @@ export default function DocsPage() {
 
       <h2>Data notes</h2>
       <p>
-        Rows follow the official LGD naming (uppercase place names) and carry the government LGD
+        Rows preserve normalized LGD names and carry the government LGD
         codes. One upstream quirk to know before you build: block codes are <em>not</em> nationally
         unique — the source data reuses a small number of block codes across different districts —
         so treat <span className="code-chip">(state, district, code)</span> as the block identity.
         State and district codes are nationally unique.
       </p>
       <p>
-        The dataset refreshes every Monday 03:00 UTC from the upstream mirror. Check{' '}
+        An automated refresh is scheduled for Monday 03:00 UTC from the upstream mirror. Check{' '}
         <span className="code-chip">meta.source_date</span> on any response to see which upstream
         edition you are reading.
       </p>

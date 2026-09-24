@@ -1,6 +1,6 @@
 {
-  "source_date": "19Sep2026",
-  "ingested_at": "2026-09-19T16:05:53.896Z",
+  "source_date": "23Sep2026",
+  "ingested_at": "2026-09-24T07:09:04.985Z",
   "row_counts": {
     "states": 36,
     "districts": 784,
@@ -10,5 +10,27 @@
   "source": "Ministry of Panchayati Raj — Local Government Directory (LGD)",
   "lgd_url": "https://lgdirectory.gov.in/",
   "data_mirror_url": "https://github.com/ramSeraph/opendata",
-  "license": "GODL-India"
+  "license": "GODL-India",
+  "source_assets": {
+    "states": {
+      "name": "states.23Sep2026.csv.7z",
+      "url": "https://github.com/ramSeraph/opendata/releases/download/lgd-latest-extra1/states.23Sep2026.csv.7z",
+      "sha256": "2a5945176f1b267bc3cef30d22600173fb42ee7a1a9a09a8e2acde799bffca6d"
+    },
+    "districts": {
+      "name": "districts.23Sep2026.csv.7z",
+      "url": "https://github.com/ramSeraph/opendata/releases/download/lgd-latest-extra1/districts.23Sep2026.csv.7z",
+      "sha256": "999821622c409d9005fd14ab8ab1632eef63b181160276b76b1d0edd94117149"
+    },
+    "subdistricts": {
+      "name": "subdistricts.23Sep2026.csv.7z",
+      "url": "https://github.com/ramSeraph/opendata/releases/download/lgd-latest-extra1/subdistricts.23Sep2026.csv.7z",
+      "sha256": "93e0a1e1f9f618d26c964e56e6ae3157fdc96f1116213d5ed52d65ad1f5f6664"
+    },
+    "blocks": {
+      "name": "blocks.23Sep2026.csv.7z",
+      "url": "https://github.com/ramSeraph/opendata/releases/download/lgd-latest-extra1/blocks.23Sep2026.csv.7z",
+      "sha256": "33077ce2f7ad101b71630ccf80bace82e797cf068369feab066ad4a04bb1305b"
+    }
+  }
 }

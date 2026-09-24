@@ -33,7 +33,7 @@ export default function StatusPage() {
       label: 'Ingested into this API at',
       value: freshness ? new Date(freshness.ingested_at).toLocaleString() : '…'
     },
-    { label: 'Automatic refresh', value: 'Every Monday 03:00 UTC (GitHub Actions)' },
+    { label: 'Scheduled refresh', value: 'Mondays 03:00 UTC (GitHub Actions)' },
     { label: 'License', value: 'Government Open Data License – India (GODL)' },
     {
       label: 'Data source',
@@ -52,7 +52,7 @@ export default function StatusPage() {
       <h1>Status</h1>
       <p className="lede">
         Live health of the API and the freshness of the dataset behind it. The ingested snapshot is
-        replaced wholesale on every successful weekly run; responses always carry their own{' '}
+        refreshed when a validated upstream snapshot changes; responses always carry their own{' '}
         <span className="code-chip">meta.source_date</span>.
       </p>
 
@@ -63,8 +63,7 @@ export default function StatusPage() {
       {failed && (
         <div className="error-box">
           <span className="code-chip">API unreachable</span> The backend at{' '}
-          <span className="code-chip">{API_BASE_URL}</span> did not respond. Start it with{' '}
-          <span className="code-chip">npm start</span> in <span className="code-chip">backend/</span>.
+          <span className="code-chip">{API_BASE_URL}</span> did not respond. Try again shortly.
         </div>
       )}
 

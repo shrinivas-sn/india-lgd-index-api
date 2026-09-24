@@ -6,7 +6,7 @@ const { baseMeta } = require('../meta');
 // district and/or state with the same rules.
 function makeLevelHandler({ getData, validDistrictCodes, validStateCodes, label }) {
   return function handler(req, res) {
-    const { district: districtCode, state: stateCode } = req.query;
+    const { district: districtCode, state: stateCode } = req.validatedQuery;
 
     if (districtCode === undefined && stateCode === undefined) {
       return sendError(
@@ -31,6 +31,13 @@ function makeLevelHandler({ getData, validDistrictCodes, validStateCodes, label 
         `Unknown state code "${stateCode}". Valid state codes: ${[...validStateCodes].join(', ')}.`,
         404
       );
+    }
+
+    if (districtCode !== undefined && stateCode !== undefined) {
+      const district = db.getDistricts().find((row) => row.code === districtCode);
+      if (district.state_code !== stateCode) {
+        return sendError(res, 'FILTER_MISMATCH', `District ${districtCode} belongs to state ${district.state_code}, not ${stateCode}.`, 400);
+      }
     }
 
     const data = getData({ stateCode, districtCode });
