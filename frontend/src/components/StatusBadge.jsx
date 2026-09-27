@@ -23,11 +23,12 @@ export default function StatusBadge() {
       }, 2500);
 
       try {
-        const res = await fetch(`${API_BASE_URL}/`);
+        const healthUrl = API_BASE_URL ? `${API_BASE_URL}/healthz` : '/healthz';
+        const res = await fetch(healthUrl);
         const duration = Date.now() - start;
         const json = await res.json();
         clearTimeout(timer);
-        if (isMounted && res.ok && json.success) {
+        if (isMounted && res.ok && (json.status === 'ok' || json.success)) {
           setStatus('online');
           setLatency(duration);
         } else if (isMounted) {
