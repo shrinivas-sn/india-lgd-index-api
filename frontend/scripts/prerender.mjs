@@ -61,10 +61,14 @@ try {
     .replace(/<title>[^<]*<\/title>/, '<title>India LGD Index — interactive tools</title>')
     .replace('</head>', '    <meta name="robots" content="noindex, nofollow" />\n</head>');
   await fs.writeFile(path.join(distDir, 'spa.html'), spa);
-  await fs.writeFile(path.join(distDir, 'robots.txt'), preview ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\nSitemap: ${siteUrl.href}sitemap.xml\n`);
+  await fs.writeFile(path.join(distDir, 'robots.txt'), preview ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl.href}sitemap.xml\n`);
   if (!preview) {
-    const entries = pages.map((page) => `  <url><loc>${escapeXml(new URL(page.route, siteUrl).href)}</loc></url>`).join('\n');
-    await fs.writeFile(path.join(distDir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>\n`);
+    const sitemapEntries = pages.map((page) => {
+      const loc = new URL(page.route, siteUrl).href;
+      const priority = page.route === '/' ? '1.0' : page.route.startsWith('/guides/') ? '0.8' : '0.9';
+      return `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <lastmod>2026-09-27</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+    }).join('\n');
+    await fs.writeFile(path.join(distDir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries}\n</urlset>\n`);
   }
   console.log('Prerendered /, /docs, and /guides; generated SPA fallback, robots, and sitemap.');
 } finally {
