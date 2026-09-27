@@ -9,13 +9,13 @@ import { createServer, loadEnv } from 'vite';
 const projectDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = path.join(projectDir, 'dist');
 const fileEnv = loadEnv('production', projectDir, '');
-const productionHost = process.env.SITE_URL || fileEnv.SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);
+const productionHost = process.env.SITE_URL || fileEnv.SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) || 'https://india-lgd-api.vercel.app';
 if (!productionHost) throw new Error('Set SITE_URL or VERCEL_PROJECT_PRODUCTION_URL before building.');
 const siteUrl = new URL(productionHost);
 if (siteUrl.protocol !== 'https:' || siteUrl.pathname !== '/' || siteUrl.search || siteUrl.hash) {
   throw new Error('SITE_URL must be an HTTPS origin without a path, query, or fragment.');
 }
-const apiBaseUrl = process.env.VITE_API_BASE_URL || fileEnv.VITE_API_BASE_URL;
+const apiBaseUrl = process.env.VITE_API_BASE_URL || fileEnv.VITE_API_BASE_URL || 'https://india-lgd-api.onrender.com';
 if (!apiBaseUrl || !/^https:\/\/[^/]+\/?$/.test(apiBaseUrl)) {
   throw new Error('Set VITE_API_BASE_URL to the Render HTTPS origin before building.');
 }
@@ -30,6 +30,7 @@ try {
   const pages = [
     { route: '/', file: path.join(distDir, 'index.html'), title: 'India LGD Index — free keyless administrative API', description: 'Look up Indian states, districts, sub-districts and development blocks by LGD code through a free, keyless JSON API.' },
     { route: '/docs', file: path.join(distDir, 'docs', 'index.html'), title: 'API documentation — India LGD Index', description: 'Developer reference for five keyless India LGD endpoints, filters, errors, rate limits and data attribution.' },
+    { route: '/guides', file: path.join(distDir, 'guides', 'index.html'), title: 'Technical Guides & SEO Reference — India LGD Index', description: 'Authoritative developer guides for India Local Government Directory, Census mappings, and KYC address verification.' },
   ];
   for (const page of pages) {
     const body = renderToString(React.createElement(MemoryRouter, { initialEntries: [page.route] }, React.createElement(AppContent)));
@@ -52,7 +53,7 @@ try {
     const entries = pages.map((page) => `  <url><loc>${escapeXml(new URL(page.route, siteUrl).href)}</loc></url>`).join('\n');
     await fs.writeFile(path.join(distDir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>\n`);
   }
-  console.log('Prerendered / and /docs; generated SPA fallback, robots, and sitemap.');
+  console.log('Prerendered /, /docs, and /guides; generated SPA fallback, robots, and sitemap.');
 } finally {
   await vite.close();
 }

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import DocsPage from './pages/DocsPage';
+import GuidesPage from './pages/GuidesPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const PlaygroundPage = React.lazy(() => import('./pages/PlaygroundPage'));
@@ -19,6 +20,7 @@ export function AppContent() {
           <Route path="/" element={<HomePage />} />
           <Route path="/playground" element={<PlaygroundPage />} />
           <Route path="/docs" element={<DocsPage />} />
+          <Route path="/guides" element={<GuidesPage />} />
           <Route path="/status" element={<StatusPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
