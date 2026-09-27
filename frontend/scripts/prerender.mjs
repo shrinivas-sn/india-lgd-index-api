@@ -19,11 +19,12 @@ const apiBaseUrl = process.env.VITE_API_BASE_URL || fileEnv.VITE_API_BASE_URL ||
 if (!apiBaseUrl || !/^https:\/\/[^/]+\/?$/.test(apiBaseUrl)) {
   throw new Error('Set VITE_API_BASE_URL to the Render HTTPS origin before building.');
 }
+process.env.VITE_API_BASE_URL = apiBaseUrl;
 
 const preview = process.env.VERCEL_ENV === 'preview';
 const escapeXml = (value) => value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const template = await fs.readFile(path.join(distDir, 'index.html'), 'utf8');
-const vite = await createServer({ root: projectDir, server: { middlewareMode: true }, appType: 'custom' });
+const vite = await createServer({ root: projectDir, server: { middlewareMode: true }, appType: 'custom', mode: 'production' });
 
 try {
   const { AppContent } = await vite.ssrLoadModule('/src/App.jsx');

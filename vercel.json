@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "frontend/dist",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "backend/data/**,backend/openapi.v1.json",
+      "maxDuration": 15
+    }
+  },
+  "rewrites": [
+    { "source": "/v1/:path*", "destination": "/api/index.js" },
+    { "source": "/healthz", "destination": "/api/index.js" },
+    { "source": "/health", "destination": "/api/index.js" },
+    { "source": "/openapi.v1.json", "destination": "/api/index.js" },
+    { "source": "/docs", "destination": "/docs/index.html" },
+    { "source": "/guides", "destination": "/guides/index.html" },
+    { "source": "/playground", "destination": "/spa.html" },
+    { "source": "/status", "destination": "/spa.html" }
+  ]
+}

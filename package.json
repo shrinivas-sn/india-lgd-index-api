@@ -1,0 +1,20 @@
+{
+  "name": "india-lgd-index-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LGD India Administrative Hierarchy API - states, districts, sub-districts, blocks with official LGD codes",
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "start": "node backend/src/index.js",
+    "test": "npm --prefix backend test"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
