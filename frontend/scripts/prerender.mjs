@@ -9,7 +9,7 @@ import { createServer, loadEnv } from 'vite';
 const projectDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = path.join(projectDir, 'dist');
 const fileEnv = loadEnv('production', projectDir, '');
-const productionHost = process.env.SITE_URL || fileEnv.SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) || 'https://india-lgd-api.vercel.app';
+const productionHost = process.env.SITE_URL || fileEnv.SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) || 'https://india-lgd-index-api.vercel.app';
 if (!productionHost) throw new Error('Set SITE_URL or VERCEL_PROJECT_PRODUCTION_URL before building.');
 const siteUrl = new URL(productionHost);
 if (siteUrl.protocol !== 'https:' || siteUrl.pathname !== '/' || siteUrl.search || siteUrl.hash) {
