@@ -63,7 +63,7 @@ export default function StatusPage() {
       {failed && (
         <div className="error-box">
           <span className="code-chip">API unreachable</span> The backend at{' '}
-          <span className="code-chip">{API_BASE_URL}</span> did not respond. Try again shortly.
+          <span className="code-chip">{API_BASE_URL || '/v1'}</span> did not respond. Try again shortly.
         </div>
       )}
 
