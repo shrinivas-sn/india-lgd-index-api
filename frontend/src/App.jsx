@@ -21,6 +21,7 @@ export function AppContent() {
           <Route path="/playground" element={<PlaygroundPage />} />
           <Route path="/docs" element={<DocsPage />} />
           <Route path="/guides" element={<GuidesPage />} />
+          <Route path="/guides/:id" element={<GuidesPage />} />
           <Route path="/status" element={<StatusPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

@@ -28,20 +28,32 @@ const vite = await createServer({ root: projectDir, server: { middlewareMode: tr
 
 try {
   const { AppContent } = await vite.ssrLoadModule('/src/App.jsx');
-  const pages = [
+  const { LGD_GUIDES } = await vite.ssrLoadModule('/src/content/guidesData.js');
+  const mainPages = [
     { route: '/', file: path.join(distDir, 'index.html'), title: 'India LGD Index — free keyless administrative API', description: 'Look up Indian states, districts, sub-districts and development blocks by LGD code through a free, keyless JSON API.' },
     { route: '/docs', file: path.join(distDir, 'docs', 'index.html'), title: 'API documentation — India LGD Index', description: 'Developer reference for five keyless India LGD endpoints, filters, errors, rate limits and data attribution.' },
     { route: '/guides', file: path.join(distDir, 'guides', 'index.html'), title: 'Technical Guides & SEO Reference — India LGD Index', description: 'Authoritative developer guides for India Local Government Directory, Census mappings, and KYC address verification.' },
   ];
+  const guidePages = LGD_GUIDES.map((g) => ({
+    route: `/guides/${g.id}`,
+    file: path.join(distDir, 'guides', g.id, 'index.html'),
+    title: `${g.title} — India LGD Index`,
+    description: g.summary,
+  }));
+  const pages = [...mainPages, ...guidePages];
   for (const page of pages) {
     const body = renderToString(React.createElement(MemoryRouter, { initialEntries: [page.route] }, React.createElement(AppContent)));
     if (!body.includes('<h1')) throw new Error(`No rendered heading for ${page.route}`);
     const canonical = new URL(page.route, siteUrl).href;
-    const html = template
+    let html = template
       .replace('<div id="root"></div>', `<div id="root">${body}</div>`)
       .replace(/<title>[^<]*<\/title>/, `<title>${escapeXml(page.title)}</title>`)
       .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${escapeXml(page.description)}" />`)
-      .replace('</head>', `${preview ? '    <meta name="robots" content="noindex, nofollow" />\n' : `    <link rel="canonical" href="${escapeXml(canonical)}" />\n`}</head>`);
+      .replace(/<link rel="canonical" href="[^"]*"\s*\/?>/, preview ? '' : `<link rel="canonical" href="${escapeXml(canonical)}" />`)
+      .replace(/<meta property="og:url" content="[^"]*"\s*\/?>/, `<meta property="og:url" content="${escapeXml(canonical)}" />`);
+    if (preview) {
+      html = html.replace('</head>', '    <meta name="robots" content="noindex, nofollow" />\n</head>');
+    }
     await fs.mkdir(path.dirname(page.file), { recursive: true });
     await fs.writeFile(page.file, html);
   }

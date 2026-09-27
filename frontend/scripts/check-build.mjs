@@ -29,18 +29,23 @@ assert.notEqual(home.match(/<title>(.*?)<\/title>/)?.[1], docs.match(/<title>(.*
 assert.notEqual(docs.match(/<title>(.*?)<\/title>/)?.[1], guides.match(/<title>(.*?)<\/title>/)?.[1]);
 assert.match(spa, /name="robots" content="noindex, nofollow"/);
 assert.doesNotMatch(spa, /<h1[ >]/);
-assert.deepEqual(config.rewrites.map((entry) => entry.source).sort(), ['/docs', '/guides', '/playground', '/status']);
-assert.ok(config.rewrites.filter((entry) => entry.source === '/docs' || entry.source === '/guides').every((entry) => entry.destination.endsWith('/index.html')));
-assert.ok(config.rewrites.filter((entry) => entry.source !== '/docs' && entry.source !== '/guides').every((entry) => entry.destination === '/spa.html'));
+assert.deepEqual(config.rewrites.map((entry) => entry.source).sort(), ['/docs', '/guides', '/guides/:id', '/playground', '/status']);
+assert.ok(config.rewrites.filter((entry) => entry.source === '/docs' || entry.source === '/guides' || entry.source === '/guides/:id').every((entry) => entry.destination.endsWith('/index.html')));
+assert.ok(config.rewrites.filter((entry) => entry.source !== '/docs' && entry.source !== '/guides' && entry.source !== '/guides/:id').every((entry) => entry.destination === '/spa.html'));
 if (preview) {
   assert.match(robots, /Disallow: \//);
   assert.equal(fs.existsSync(path.join(dist, 'sitemap.xml')), false);
 } else {
   const sitemap = fs.readFileSync(path.join(dist, 'sitemap.xml'), 'utf8');
   assert.match(robots, /Sitemap: https:\/\//);
-  assert.equal((sitemap.match(/<url>/g) || []).length, 3);
+  assert.equal((sitemap.match(/<url>/g) || []).length, 6);
   assert.match(sitemap, /<loc>https:\/\/[^<]+\/docs<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/[^<]+\/guides<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/[^<]+\/guides\/why-india-needs-free-lgd-api<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/[^<]+\/guides\/census-2011-vs-lgd-codes-mapping<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/[^<]+\/guides\/address-normalization-cascading-dropdowns-react<\/loc>/);
   assert.doesNotMatch(sitemap, /playground|status/);
+  const guideHtml = fs.readFileSync(path.join(dist, 'guides', 'why-india-needs-free-lgd-api', 'index.html'), 'utf8');
+  assert.match(guideHtml, /Why India Needs an Open LGD API/);
 }
 console.log('Built HTML, SEO metadata, sitemap, and route fallbacks verified.');

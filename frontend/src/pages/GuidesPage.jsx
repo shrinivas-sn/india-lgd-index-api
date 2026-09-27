@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { LGD_GUIDES } from '../content/guidesData';
 
 export default function GuidesPage() {
-  const [selectedGuide, setSelectedGuide] = useState(LGD_GUIDES[0]);
+  const { id } = useParams();
+  const matchedGuide = id ? LGD_GUIDES.find((g) => g.id === id) : null;
+  const [selectedGuideState, setSelectedGuideState] = useState(LGD_GUIDES[0]);
+  const selectedGuide = matchedGuide || selectedGuideState;
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredGuides = LGD_GUIDES.filter((g) =>
@@ -38,10 +42,12 @@ export default function GuidesPage() {
             {filteredGuides.map((guide) => {
               const isSelected = selectedGuide?.id === guide.id;
               return (
-                <div
+                <Link
                   key={guide.id}
-                  onClick={() => setSelectedGuide(guide)}
+                  to={`/guides/${guide.id}`}
+                  onClick={() => setSelectedGuideState(guide)}
                   style={{
+                    display: 'block', textDecoration: 'none',
                     padding: '14px 16px', borderRadius: 8, cursor: 'pointer',
                     border: `1px solid ${isSelected ? 'var(--color-primary, #0284c7)' : 'var(--color-border, #e2e8f0)'}`,
                     background: isSelected ? 'var(--color-bg-hover, #f0f9ff)' : 'var(--color-card, #ffffff)',
@@ -55,7 +61,7 @@ export default function GuidesPage() {
                   <h3 style={{ fontSize: 14, fontWeight: 600, margin: 0, lineHeight: 1.4, color: isSelected ? 'var(--color-primary, #0284c7)' : 'inherit' }}>
                     {guide.title}
                   </h3>
-                </div>
+                </Link>
               );
             })}
           </div>

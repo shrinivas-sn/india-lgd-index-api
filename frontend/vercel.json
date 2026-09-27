@@ -6,6 +6,7 @@
   "rewrites": [
     { "source": "/docs", "destination": "/docs/index.html" },
     { "source": "/guides", "destination": "/guides/index.html" },
+    { "source": "/guides/:id", "destination": "/guides/:id/index.html" },
     { "source": "/playground", "destination": "/spa.html" },
     { "source": "/status", "destination": "/spa.html" }
   ]
