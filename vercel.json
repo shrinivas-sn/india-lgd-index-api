@@ -10,7 +10,7 @@
     }
   },
   "rewrites": [
-    { "source": "/v1/:path*", "destination": "/api/index.js" },
+    { "source": "/v1/(.*)", "destination": "/api/index.js" },
     { "source": "/healthz", "destination": "/api/index.js" },
     { "source": "/health", "destination": "/api/index.js" },
     { "source": "/openapi.v1.json", "destination": "/api/index.js" },

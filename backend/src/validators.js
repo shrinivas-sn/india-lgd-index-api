@@ -36,6 +36,7 @@ function validateQuery(allowed) {
     const query = new URL(req.originalUrl, 'http://localhost').searchParams;
     const values = {};
     for (const [key, value] of query) {
+      if (key === 'path') continue;
       if (!allowed.includes(key) || Object.hasOwn(values, key)) {
         return sendError(res, 'INVALID_QUERY_PARAM', `Unknown or repeated query parameter "${key}".`, 400);
       }
