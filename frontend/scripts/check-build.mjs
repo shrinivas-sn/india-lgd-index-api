@@ -9,6 +9,7 @@ const home = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 const docs = fs.readFileSync(path.join(dist, 'docs', 'index.html'), 'utf8');
 const guides = fs.readFileSync(path.join(dist, 'guides', 'index.html'), 'utf8');
 const spa = fs.readFileSync(path.join(dist, 'spa.html'), 'utf8');
+const notFound = fs.readFileSync(path.join(dist, '404.html'), 'utf8');
 const robots = fs.readFileSync(path.join(dist, 'robots.txt'), 'utf8');
 const config = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
 const preview = process.env.VERCEL_ENV === 'preview';
@@ -29,6 +30,10 @@ assert.notEqual(home.match(/<title>(.*?)<\/title>/)?.[1], docs.match(/<title>(.*
 assert.notEqual(docs.match(/<title>(.*?)<\/title>/)?.[1], guides.match(/<title>(.*?)<\/title>/)?.[1]);
 assert.match(spa, /name="robots" content="noindex, nofollow"/);
 assert.doesNotMatch(spa, /<h1[ >]/);
+assert.match(notFound, /<h1>Page not found<\/h1>/);
+assert.match(notFound, /<title>Page not found — India LGD Index<\/title>/);
+assert.match(notFound, /name="robots" content="noindex, nofollow"/);
+assert.doesNotMatch(notFound, /rel="canonical"/);
 assert.deepEqual(config.rewrites.map((entry) => entry.source).sort(), ['/docs', '/guides', '/guides/:id', '/playground', '/status']);
 assert.ok(config.rewrites.filter((entry) => entry.source === '/docs' || entry.source === '/guides' || entry.source === '/guides/:id').every((entry) => entry.destination.endsWith('/index.html')));
 assert.ok(config.rewrites.filter((entry) => entry.source !== '/docs' && entry.source !== '/guides' && entry.source !== '/guides/:id').every((entry) => entry.destination === '/spa.html'));
