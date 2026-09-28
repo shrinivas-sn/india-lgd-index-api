@@ -131,4 +131,4 @@ Code: no repository license file has been added yet. This does not change the da
 
 ## Status
 
-The public Vercel deployment serves the `23Sep2026` snapshot as checked on 28 September 2026. The published deployment has working hierarchy and search routes; the `/freshness` and `/openapi.json` rewrite fix in this branch still needs deployment and a fresh live smoke check. See [deployment and verification](DOCS/DEPLOYMENT.md).
+As checked on 28 September 2026, the public Vercel deployment serves the `23Sep2026` snapshot. The hierarchy, search, `/freshness`, and `/openapi.json` routes return the documented JSON with open CORS, and the scheduled ingest workflow completed successfully. The API smoke checks pass. Unknown portal URLs currently return the homepage with HTTP 200; the portal's full smoke check therefore remains open. See [deployment and verification](DOCS/DEPLOYMENT.md).

@@ -5,8 +5,10 @@ https://india-lgd-index-api.vercel.app/. The Vercel project builds from the
 repository root, using the root `vercel.json` to route `/v1/*`, `/healthz`,
 `/freshness`, and `/openapi.json` to the Express function. Run
 `node scripts/smoke.mjs https://india-lgd-index-api.vercel.app https://india-lgd-index-api.vercel.app`
-after deploying this rewrite fix. The previous Render instructions below are
-historical and do not describe the current public deployment.
+for a full portal check. The API routes pass live; unknown portal URLs currently
+return the homepage with HTTP 200, so the full portal check remains open. The
+previous Render instructions below are historical and do not describe the
+current public deployment.
 
 This is an independent API for LGD data. The first public release uses a Vercel static portal and one Render free web service. Render's free service sleeps after inactivity, so cold requests can be slow; do not promise always-on uptime. No consumer account or API key is required. The owner confirmed a noncommercial launch for Vercel Hobby.
 
