@@ -62,7 +62,10 @@ try {
     .replace('</head>', '    <meta name="robots" content="noindex, nofollow" />\n</head>');
   await fs.writeFile(path.join(distDir, 'spa.html'), spa);
   await fs.writeFile(path.join(distDir, 'robots.txt'), preview ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl.href}sitemap.xml\n`);
-  if (!preview) {
+  if (preview) {
+    // Vite copies public/sitemap.xml into dist before prerendering.
+    await fs.rm(path.join(distDir, 'sitemap.xml'), { force: true });
+  } else {
     const sitemapEntries = pages.map((page) => {
       const loc = new URL(page.route, siteUrl).href;
       const priority = page.route === '/' ? '1.0' : page.route.startsWith('/guides/') ? '0.8' : '0.9';
@@ -70,7 +73,7 @@ try {
     }).join('\n');
     await fs.writeFile(path.join(distDir, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries}\n</urlset>\n`);
   }
-  console.log('Prerendered /, /docs, and /guides; generated SPA fallback, robots, and sitemap.');
+  console.log(`Prerendered /, /docs, and /guides; generated SPA fallback, robots${preview ? '' : ', and sitemap'}.`);
 } finally {
   await vite.close();
 }
