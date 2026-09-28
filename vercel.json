@@ -13,6 +13,8 @@
     { "source": "/v1/(.*)", "destination": "/api/index.js" },
     { "source": "/healthz", "destination": "/api/index.js" },
     { "source": "/health", "destination": "/api/index.js" },
+    { "source": "/freshness", "destination": "/api/index.js" },
+    { "source": "/openapi.json", "destination": "/api/index.js" },
     { "source": "/openapi.v1.json", "destination": "/api/index.js" },
     { "source": "/docs", "destination": "/docs/index.html" },
     { "source": "/guides", "destination": "/guides/index.html" },

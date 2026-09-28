@@ -18,7 +18,7 @@ export const LGD_GUIDES = [
       },
       {
         heading: "Quick cURL Query Example",
-        code: 'curl "https://india-lgd-api.onrender.com/v1/districts?state=32"'
+        code: 'curl "https://india-lgd-index-api.vercel.app/v1/districts?state=32"'
       }
     ]
   },
@@ -41,7 +41,7 @@ export const LGD_GUIDES = [
       },
       {
         heading: "Code Example: Resolving Legacy Records",
-        code: `const res = await fetch('https://india-lgd-api.onrender.com/v1/states');
+        code: `const res = await fetch('https://india-lgd-index-api.vercel.app/v1/states');
 const { data: states } = await res.json();
 const state = states.find(s => s.census_2011_code === '32');
 console.log('Resolved LGD Code:', state.code); // 32 (Kerala)`

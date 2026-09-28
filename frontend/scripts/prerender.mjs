@@ -15,9 +15,9 @@ const siteUrl = new URL(productionHost);
 if (siteUrl.protocol !== 'https:' || siteUrl.pathname !== '/' || siteUrl.search || siteUrl.hash) {
   throw new Error('SITE_URL must be an HTTPS origin without a path, query, or fragment.');
 }
-const apiBaseUrl = process.env.VITE_API_BASE_URL || fileEnv.VITE_API_BASE_URL || 'https://india-lgd-api.onrender.com';
+const apiBaseUrl = process.env.VITE_API_BASE_URL || fileEnv.VITE_API_BASE_URL || siteUrl.origin;
 if (!apiBaseUrl || !/^https:\/\/[^/]+\/?$/.test(apiBaseUrl)) {
-  throw new Error('Set VITE_API_BASE_URL to the Render HTTPS origin before building.');
+  throw new Error('Set VITE_API_BASE_URL to an HTTPS API origin before building.');
 }
 process.env.VITE_API_BASE_URL = apiBaseUrl;
 

@@ -1,4 +1,12 @@
-# Deployment and operations
+# Deployment and operations (legacy Render plan; current deployment is Vercel)
+
+**Current deployment (28 September 2026):** The API and portal share
+https://india-lgd-index-api.vercel.app/. The Vercel project builds from the
+repository root, using the root `vercel.json` to route `/v1/*`, `/healthz`,
+`/freshness`, and `/openapi.json` to the Express function. Run
+`node scripts/smoke.mjs https://india-lgd-index-api.vercel.app https://india-lgd-index-api.vercel.app`
+after deploying this rewrite fix. The previous Render instructions below are
+historical and do not describe the current public deployment.
 
 This is an independent API for LGD data. The first public release uses a Vercel static portal and one Render free web service. Render's free service sleeps after inactivity, so cold requests can be slow; do not promise always-on uptime. No consumer account or API key is required. The owner confirmed a noncommercial launch for Vercel Hobby.
 
