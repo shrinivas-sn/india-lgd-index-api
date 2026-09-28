@@ -5,18 +5,18 @@ A keyless REST API for India's administrative hierarchy: states, districts, sub-
 Current dataset: **36 states and UTs, 784 districts, 7,092 sub-districts, 7,338 blocks**.
 
 No signup, no API key, CORS open to all origins. Every response carries a `meta.attribution` block naming the source and license.
-The machine-readable [OpenAPI 3.1 contract](backend/openapi.v1.json) is also served at `GET /openapi.json` by the backend.
+The machine-readable [OpenAPI 3.1 contract](backend/openapi.v1.json) is served at `GET /openapi.json`.
 
 ## Quick start
 
-These examples use a backend running locally. After deployment, use the Render HTTPS origin in place of `http://localhost:3000`; the [deployment guide](DOCS/DEPLOYMENT.md) records how to connect the Vercel portal to it.
+The API and web portal are available at [india-lgd-index-api.vercel.app](https://india-lgd-index-api.vercel.app/). These examples use the public API origin; use `http://localhost:3000` when running the backend locally.
 
 ```bash
-curl http://localhost:3000/v1/states
-curl "http://localhost:3000/v1/districts?state=32"      # Kerala's 14 districts
-curl "http://localhost:3000/v1/subdistricts?district=607"
-curl "http://localhost:3000/v1/blocks?district=607"
-curl "http://localhost:3000/v1/search?q=ramgarh"
+curl https://india-lgd-index-api.vercel.app/v1/states
+curl "https://india-lgd-index-api.vercel.app/v1/districts?state=32"      # Kerala's districts
+curl "https://india-lgd-index-api.vercel.app/v1/subdistricts?district=607"
+curl "https://india-lgd-index-api.vercel.app/v1/blocks?district=607"
+curl "https://india-lgd-index-api.vercel.app/v1/search?q=ramgarh"
 ```
 
 Every response uses the same envelope:
@@ -62,7 +62,7 @@ Filtering rules, applied consistently:
 | `FILTER_MISMATCH` | 400 | District does not belong to the supplied state |
 | `INVALID_STATE_CODE` | 404 | The code is not a valid LGD state code; message lists valid codes |
 | `INVALID_DISTRICT_CODE` | 404 | The code is not a valid LGD district code |
-| `ENDPOINT_NOT_FOUND` | 404 | Unknown route, including anything outside `/v1` |
+| `ENDPOINT_NOT_FOUND` | 404 | Unknown backend route |
 | `TOO_MANY_REQUESTS` | 429 | More than 100 requests in 15 minutes from one IP |
 | `URI_TOO_LONG` | 414 | Request URL exceeds 2,048 characters |
 
@@ -87,7 +87,7 @@ npm install
 npm run ingest        # rebuild backend/data/*.json from the upstream mirror (optional, already committed)
 npm start             # serves http://localhost:3000
 
-# Tests (39 focused tests, no external server needed)
+# Tests (no external server needed)
 npm test
 
 # Frontend portal
@@ -97,9 +97,9 @@ npm run dev           # http://localhost:5173; browser calls the backend directl
 npm run build         # production bundle in dist/
 ```
 
-`backend/.env` supports one variable, `PORT` (default 3000). `frontend/.env` supports `VITE_API_BASE_URL` (default `http://localhost:3000`); point it elsewhere to run the portal against a deployed instance. Copy the `.env.example` files if you want a starting point.
+`backend/.env` supports `PORT` (default 3000). The frontend uses `http://localhost:3000` during local development and its own origin in production; set `VITE_API_BASE_URL` to use a separate backend. Copy the `.env.example` files if you want a starting point.
 
-Production builds require an HTTPS `VITE_API_BASE_URL` and either `SITE_URL` or Vercel's `VERCEL_PROJECT_PRODUCTION_URL` for canonical links. See [deployment steps](DOCS/DEPLOYMENT.md).
+Production builds use `SITE_URL` or Vercel's `VERCEL_PROJECT_PRODUCTION_URL` for canonical links. Any configured production `VITE_API_BASE_URL` must be an HTTPS origin. See [deployment steps](DOCS/DEPLOYMENT.md).
 
 ## Repo layout
 
@@ -127,8 +127,8 @@ frontend/
 
 Data: [GODL-India](https://www.data.gov.in/Godl) (Government Open Data License, India), source [Local Government Directory](https://lgdirectory.gov.in/), Ministry of Panchayati Raj, mirrored via [ramSeraph/opendata](https://github.com/ramSeraph/opendata). This project is not affiliated with the Ministry. If you build on this API, keep the attribution; `meta.attribution` in every response already carries it.
 
-Code: see [LICENSE](LICENSE).
+Code: no repository license file has been added yet. This does not change the data attribution requirements above.
 
 ## Status
 
-The `23Sep2026` snapshot passes 27 focused tests locally. There is no deployed instance yet; see [PLAN.md](PLAN.md) for production work.
+The public Vercel deployment serves the `23Sep2026` snapshot as checked on 28 September 2026. The published deployment has working hierarchy and search routes; the `/freshness` and `/openapi.json` rewrite fix in this branch still needs deployment and a fresh live smoke check. See [deployment and verification](DOCS/DEPLOYMENT.md).

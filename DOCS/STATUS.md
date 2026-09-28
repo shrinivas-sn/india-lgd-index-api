@@ -1,24 +1,23 @@
 <!-- docs-structure: v1 -->
 # STATUS
 
-**Workspace:** `E:\lgd-admin-hierarchy-api` (`production-readiness` tracks public `main`).
-**Current:** The release and URL handoff fix are on the public `main` branch of
-[shrinivas-sn/india-lgd-index-api](https://github.com/shrinivas-sn/india-lgd-index-api).
-[GitHub CI passed for the URL fix](https://github.com/shrinivas-sn/india-lgd-index-api/actions/runs/35975214861).
-Render and Vercel deployment and public API listing have not happened.
+**Repository:** [shrinivas-sn/india-lgd-index-api](https://github.com/shrinivas-sn/india-lgd-index-api).
+The public Vercel site and API are live at https://india-lgd-index-api.vercel.app/.
+The local rewrite fix for `/freshness` and `/openapi.json` still needs deployment
+and a live smoke check. The public API listing is pending.
 
 - Dataset: 36 states / 784 districts / 7,092 sub-districts / 7,338 blocks
   (`23Sep2026` snapshot), integrity-checked, deterministic pipeline.
 - Backend: 5 v1 endpoints + root health check, CONVENTIONS.md envelopes, CORS-all,
   rate limit 100/15min/IP with `trust proxy 1` (PaaS-safe), JSON 404 + error handler.
-- Tests: 39/39 (`npm test`, offline) after ingestion and API hardening;
-  full curl sweep was green on 19/09/2026 after the trust-proxy fix.
+- Tests: all backend test files and snapshot integrity check pass locally for
+  the pending route rewrite.
 - Frontend: Home / Playground / Docs / Status / 404; Home and Docs now prerender
   real HTML with canonical tags and sitemap. The production bundle checks that
-  no local API URL ships; Vercel routing remains to be observed after deploy.
-- CI: push/PR checks passed on GitHub for URL fix `6e19704`; Monday 03:00 UTC ingest
-  is configured but has not run on GitHub. A repeated local ingest leaves data
-  bytes and `ingested_at` unchanged. Render Blueprint and Vercel config are in Git.
+  no local API URL ships. Existing Vercel hierarchy routes were checked live.
+- CI: Monday 03:00 UTC ingest is configured but a successful hosted run has not
+  been verified for this assessment. A repeated local ingest leaves data bytes
+  and `ingested_at` unchanged.
 - README: full developer doc (endpoints, error table, data pipeline, local setup,
   GODL attribution) — every number taken from live verified output.
 - Quality gates (attempt logs in `DOCS/CONTEXT/DECISIONS.md`): no-ai-slop PASS
@@ -28,17 +27,9 @@ Render and Vercel deployment and public API listing have not happened.
 
 ## Next up (start here)
 
-Read root `PLAN.md` and its last Progress Log entry first. The 24/09/2026
-revalidation is in `DOCS/RESEARCH/RESEARCH.md`; it corrects the old “no LGD API”
-claim and lists ingestion and request-validation gaps. The one-off
-`backend/scripts/probe-dupes.js` was removed; its finding is retained in
-`DOCS/CONTEXT/DECISIONS.md` and regression tests.
-
-1. When the owner resumes deployment, create the Render free Blueprint from
-   `render.yaml` in this repository and supply its HTTPS URL. Hosting account
-   access is unavailable in this workspace; the owner chose to do this later.
-2. Set Vercel `frontend/` project's `VITE_API_BASE_URL` to that Render origin.
-   Redeploy and check that browser requests and copyable examples use Render,
-   never localhost. Follow `DOCS/DEPLOYMENT.md` for smoke, SEO, and rollback.
-3. Observe hosted cron, source freshness, proxy IP behavior, browser routes,
-   cold start, and failure recovery before claiming production readiness.
+1. Deploy the root `vercel.json` rewrite change, then run
+   `node scripts/smoke.mjs https://india-lgd-index-api.vercel.app https://india-lgd-index-api.vercel.app`.
+2. Check the hosted ingest schedule and source freshness. Confirm the
+   production `/freshness` and `/openapi.json` responses are JSON.
+3. Re-run the current `public-apis` duplication and contribution preflight;
+   propose one Government-section README row only if every gate passes.

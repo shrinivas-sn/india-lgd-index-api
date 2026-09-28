@@ -7,7 +7,7 @@ export default function CodeSnippet({ path, url }) {
   const [copied, setCopied] = useState(false);
 
   const target = path || url || '';
-  const origin = API_BASE_URL || (typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://india-lgd-api.vercel.app');
+  const origin = API_BASE_URL || (typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://india-lgd-index-api.vercel.app');
   const fullUrl = target.startsWith('http') ? target : `${origin}${target.startsWith('/') ? '' : '/'}${target}`;
 
   const getCode = () => {
