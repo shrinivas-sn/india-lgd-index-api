@@ -15,23 +15,24 @@
     </linearGradient>
   </defs>
 
-  <!-- Base Badge / Container -->
-  <rect x="4" y="4" width="56" height="56" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+  <!-- Level 1: Central / State Hub (Apex Node) -->
+  <rect x="22" y="4" width="20" height="18" rx="5" fill="url(#lgdNavy)" stroke="#38bdf8" stroke-width="2" />
+  <circle cx="32" cy="13" r="4" fill="#ffffff" />
+  <circle cx="32" cy="13" r="1.5" fill="#1e3a8a" />
 
   <!-- Hierarchy Connecting Lines -->
-  <path d="M32 20V34 M18 34H46 M18 34V44 M32 34V44 M46 34V44" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M32 22V36 M13 36H51 M13 36V44 M32 36V44 M51 36V44" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
 
-  <!-- Level 1: Central / State Hub (Apex Node) -->
-  <rect x="25" y="11" width="14" height="14" rx="4" fill="url(#lgdNavy)" stroke="#60a5fa" stroke-width="1.5" />
-  <circle cx="32" cy="18" r="2.5" fill="#ffffff" />
+  <!-- Level 2: District & Block Nodes -->
+  <!-- Left Node (District - Gold) -->
+  <rect x="4" y="44" width="18" height="16" rx="4.5" fill="url(#lgdGold)" stroke="#fde047" stroke-width="1.5" />
+  <circle cx="13" cy="52" r="3" fill="#ffffff" />
 
-  <!-- Level 2: District Nodes (Middle Layer) -->
-  <rect x="11" y="38" width="14" height="12" rx="3.5" fill="#1e293b" stroke="url(#lgdGold)" stroke-width="1.5" />
-  <circle cx="18" cy="44" r="2" fill="#fbbf24" />
+  <!-- Center Node (Sub-District - Blue) -->
+  <rect x="23" y="44" width="18" height="16" rx="4.5" fill="url(#lgdNavy)" stroke="#93c5fd" stroke-width="1.5" />
+  <circle cx="32" cy="52" r="3" fill="#ffffff" />
 
-  <rect x="25" y="38" width="14" height="12" rx="3.5" fill="#1e293b" stroke="url(#lgdNavy)" stroke-width="1.5" />
-  <circle cx="32" cy="44" r="2" fill="#38bdf8" />
-
-  <rect x="39" y="38" width="14" height="12" rx="3.5" fill="#1e293b" stroke="url(#lgdGreen)" stroke-width="1.5" />
-  <circle cx="46" cy="44" r="2" fill="#34d399" />
+  <!-- Right Node (Block - Green) -->
+  <rect x="42" y="44" width="18" height="16" rx="4.5" fill="url(#lgdGreen)" stroke="#a7f3d0" stroke-width="1.5" />
+  <circle cx="51" cy="52" r="3" fill="#ffffff" />
 </svg>

@@ -14,9 +14,6 @@
       <stop offset="50%" stop-color="#f59e0b" />
       <stop offset="100%" stop-color="#b45309" />
     </linearGradient>
-    <filter id="lgdDropShadow" x="-10%" y="-10%" width="130%" height="130%" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#020617" flood-opacity="0.65" />
-    </filter>
     <filter id="lgdGlow" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="8" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
@@ -25,41 +22,32 @@
 
   <!-- Developer API Brackets -->
   <path d="M 68 152 C 48 152 36 164 36 200 V 256 C 36 266 28 272 16 272 C 28 272 36 278 36 288 V 344 C 36 380 48 392 68 392" 
-        stroke="url(#lgdNavyGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#lgdGlow)" />
+        stroke="url(#lgdNavyGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" filter="url(#lgdGlow)" />
   <path d="M 444 152 C 464 152 476 164 476 200 V 256 C 476 266 484 272 496 272 C 484 272 476 278 476 288 V 344 C 476 380 464 392 444 392" 
-        stroke="url(#lgdNavyGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#lgdGlow)" />
-
-  <!-- Main Administrative Card -->
-  <rect x="96" y="96" width="320" height="320" rx="36" fill="#0f172a" stroke="#334155" stroke-width="4" filter="url(#lgdDropShadow)" />
-  
-  <!-- Header Bar -->
-  <path d="M 96 136 C 96 113.909 113.909 96 136 96 H 376 C 398.091 96 416 113.909 416 136 V 160 H 96 V 136 Z" fill="url(#lgdNavyGrad)" />
-  <circle cx="132" cy="128" r="6" fill="#93c5fd" />
-  <circle cx="152" cy="128" r="6" fill="#93c5fd" opacity="0.6" />
-  <circle cx="172" cy="128" r="6" fill="#93c5fd" opacity="0.3" />
+        stroke="url(#lgdNavyGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" filter="url(#lgdGlow)" />
 
   <!-- Hierarchy Circuit Tracks / Branches -->
-  <path d="M 256 210 V 270 M 160 270 H 352 M 160 270 V 310 M 256 270 V 310 M 352 270 V 310" 
-        stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 256 180 V 270 M 140 270 H 372 M 140 270 V 310 M 256 270 V 310 M 372 270 V 310" 
+        stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
 
   <!-- Tier 1: Apex State Node (With Ashoka Core Accent) -->
-  <rect x="216" y="176" width="80" height="52" rx="14" fill="#1e293b" stroke="url(#lgdNavyGrad)" stroke-width="3.5" filter="url(#lgdGlow)" />
-  <circle cx="256" cy="202" r="12" fill="url(#lgdNavyGrad)" />
-  <circle cx="256" cy="202" r="5" fill="#ffffff" />
+  <rect x="186" y="90" width="140" height="90" rx="24" fill="url(#lgdNavyGrad)" stroke="#60a5fa" stroke-width="4" filter="url(#lgdGlow)" />
+  <circle cx="256" cy="135" r="22" fill="#ffffff" />
+  <circle cx="256" cy="135" r="9" fill="#1e3a8a" />
 
   <!-- Tier 2: District & Block Nodes -->
   <!-- Left District (Gold) -->
-  <rect x="120" y="310" width="80" height="54" rx="14" fill="#1e293b" stroke="url(#lgdGoldGrad)" stroke-width="3" />
-  <rect x="136" y="324" width="48" height="8" rx="4" fill="url(#lgdGoldGrad)" />
-  <rect x="144" y="338" width="32" height="6" rx="3" fill="#64748b" />
+  <rect x="80" y="310" width="120" height="84" rx="20" fill="url(#lgdGoldGrad)" stroke="#fde047" stroke-width="3.5" filter="url(#lgdGlow)" />
+  <circle cx="140" cy="352" r="14" fill="#ffffff" />
+  <circle cx="140" cy="352" r="6" fill="#b45309" />
 
   <!-- Center Sub-District (Blue) -->
-  <rect x="216" y="310" width="80" height="54" rx="14" fill="#1e293b" stroke="url(#lgdNavyGrad)" stroke-width="3" />
-  <rect x="232" y="324" width="48" height="8" rx="4" fill="url(#lgdNavyGrad)" />
-  <rect x="240" y="338" width="32" height="6" rx="3" fill="#64748b" />
+  <rect x="196" y="310" width="120" height="84" rx="20" fill="url(#lgdNavyGrad)" stroke="#93c5fd" stroke-width="3.5" filter="url(#lgdGlow)" />
+  <circle cx="256" cy="352" r="14" fill="#ffffff" />
+  <circle cx="256" cy="352" r="6" fill="#1e3a8a" />
 
   <!-- Right Block Node (Green) -->
-  <rect x="312" y="310" width="80" height="54" rx="14" fill="#1e293b" stroke="url(#lgdGreenGrad)" stroke-width="3" />
-  <rect x="328" y="324" width="48" height="8" rx="4" fill="url(#lgdGreenGrad)" />
-  <rect x="336" y="338" width="32" height="6" rx="3" fill="#64748b" />
+  <rect x="312" y="310" width="120" height="84" rx="20" fill="url(#lgdGreenGrad)" stroke="#a7f3d0" stroke-width="3.5" filter="url(#lgdGlow)" />
+  <circle cx="372" cy="352" r="14" fill="#ffffff" />
+  <circle cx="372" cy="352" r="6" fill="#059669" />
 </svg>
