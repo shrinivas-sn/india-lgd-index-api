@@ -10,29 +10,37 @@
       <stop offset="100%" stop-color="#059669" />
     </linearGradient>
     <linearGradient id="lgdGold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="0%" stop-color="#fde047" />
       <stop offset="100%" stop-color="#d97706" />
     </linearGradient>
   </defs>
 
-  <!-- Level 1: Central / State Hub (Apex Node) -->
-  <rect x="22" y="4" width="20" height="18" rx="5" fill="url(#lgdNavy)" stroke="#38bdf8" stroke-width="2" />
-  <circle cx="32" cy="13" r="4" fill="#ffffff" />
-  <circle cx="32" cy="13" r="1.5" fill="#1e3a8a" />
+  <!-- Triangular Pediment / Roof Apex -->
+  <path d="M3 22L32 5L61 22H3Z" fill="url(#lgdNavy)" />
+  <rect x="2" y="22" width="60" height="4" rx="1" fill="#1e3a8a" />
 
-  <!-- Hierarchy Connecting Lines -->
-  <path d="M32 22V36 M13 36H51 M13 36V44 M32 36V44 M51 36V44" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Center Ashoka Circle Accent in Pediment -->
+  <circle cx="32" cy="15" r="4" fill="#ffffff" />
+  <circle cx="32" cy="15" r="2" fill="#0284c7" />
 
-  <!-- Level 2: District & Block Nodes -->
-  <!-- Left Node (District - Gold) -->
-  <rect x="4" y="44" width="18" height="16" rx="4.5" fill="url(#lgdGold)" stroke="#fde047" stroke-width="1.5" />
-  <circle cx="13" cy="52" r="3" fill="#ffffff" />
+  <!-- 4 Classical Administrative Tier Pillars -->
+  <!-- Pillar 1: States -->
+  <rect x="8" y="26" width="9" height="23" rx="2" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <rect x="10" y="29" width="5" height="17" rx="1" fill="url(#lgdNavy)" />
 
-  <!-- Center Node (Sub-District - Blue) -->
-  <rect x="23" y="44" width="18" height="16" rx="4.5" fill="url(#lgdNavy)" stroke="#93c5fd" stroke-width="1.5" />
-  <circle cx="32" cy="52" r="3" fill="#ffffff" />
+  <!-- Pillar 2: Districts -->
+  <rect x="21" y="26" width="9" height="23" rx="2" fill="url(#lgdNavy)" />
+  <rect x="23" y="29" width="5" height="17" rx="1" fill="url(#lgdGold)" />
 
-  <!-- Right Node (Block - Green) -->
-  <rect x="42" y="44" width="18" height="16" rx="4.5" fill="url(#lgdGreen)" stroke="#a7f3d0" stroke-width="1.5" />
-  <circle cx="51" cy="52" r="3" fill="#ffffff" />
+  <!-- Pillar 3: Sub-Districts -->
+  <rect x="34" y="26" width="9" height="23" rx="2" fill="url(#lgdNavy)" />
+  <rect x="36" y="29" width="5" height="17" rx="1" fill="#38bdf8" />
+
+  <!-- Pillar 4: Blocks -->
+  <rect x="47" y="26" width="9" height="23" rx="2" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+  <rect x="49" y="29" width="5" height="17" rx="1" fill="url(#lgdGreen)" />
+
+  <!-- Foundation Base Plinth -->
+  <rect x="4" y="49" width="56" height="5" rx="1.5" fill="#1e293b" />
+  <rect x="2" y="54" width="60" height="6" rx="2" fill="url(#lgdGreen)" />
 </svg>

@@ -14,40 +14,46 @@
       <stop offset="50%" stop-color="#f59e0b" />
       <stop offset="100%" stop-color="#b45309" />
     </linearGradient>
-    <filter id="lgdGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="8" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    <filter id="lgdShadow" x="-10%" y="-10%" width="130%" height="130%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.4" />
     </filter>
   </defs>
 
-  <!-- Developer API Brackets -->
-  <path d="M 68 152 C 48 152 36 164 36 200 V 256 C 36 266 28 272 16 272 C 28 272 36 278 36 288 V 344 C 36 380 48 392 68 392" 
-        stroke="url(#lgdNavyGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" filter="url(#lgdGlow)" />
-  <path d="M 444 152 C 464 152 476 164 476 200 V 256 C 476 266 484 272 496 272 C 484 272 476 278 476 288 V 344 C 476 380 464 392 444 392" 
-        stroke="url(#lgdNavyGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" filter="url(#lgdGlow)" />
+  <!-- Developer API Brackets on Sides -->
+  <path d="M 48 140 C 28 140 16 152 16 188 V 244 C 16 254 8 260 -4 260 C 8 260 16 266 16 276 V 332 C 16 368 28 380 48 380" 
+        stroke="url(#lgdNavyGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 464 140 C 484 140 496 152 496 188 V 244 C 496 254 504 260 516 260 C 504 260 496 266 496 276 V 332 C 496 368 484 380 464 380" 
+        stroke="url(#lgdNavyGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
 
-  <!-- Hierarchy Circuit Tracks / Branches -->
-  <path d="M 256 180 V 270 M 140 270 H 372 M 140 270 V 310 M 256 270 V 310 M 372 270 V 310" 
-        stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- The Architectural Administrative Edifice (Fills Canvas) -->
+  <g filter="url(#lgdShadow)">
+    <!-- Pediment / Apex Roof -->
+    <path d="M 40 180 L 256 44 L 472 180 Z" fill="url(#lgdNavyGrad)" stroke="#1e293b" stroke-width="4" />
+    <rect x="32" y="180" width="448" height="32" rx="8" fill="#1e3a8a" />
 
-  <!-- Tier 1: Apex State Node (With Ashoka Core Accent) -->
-  <rect x="186" y="90" width="140" height="90" rx="24" fill="url(#lgdNavyGrad)" stroke="#60a5fa" stroke-width="4" filter="url(#lgdGlow)" />
-  <circle cx="256" cy="135" r="22" fill="#ffffff" />
-  <circle cx="256" cy="135" r="9" fill="#1e3a8a" />
+    <!-- Center Ashoka Circle Accent -->
+    <circle cx="256" cy="125" r="32" fill="#ffffff" />
+    <circle cx="256" cy="125" r="16" fill="#0284c7" />
 
-  <!-- Tier 2: District & Block Nodes -->
-  <!-- Left District (Gold) -->
-  <rect x="80" y="310" width="120" height="84" rx="20" fill="url(#lgdGoldGrad)" stroke="#fde047" stroke-width="3.5" filter="url(#lgdGlow)" />
-  <circle cx="140" cy="352" r="14" fill="#ffffff" />
-  <circle cx="140" cy="352" r="6" fill="#b45309" />
+    <!-- 4 Tiers Governance Pillars -->
+    <!-- Pillar 1: States (National/State Tier) -->
+    <rect x="76" y="212" width="68" height="184" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="3" />
+    <rect x="92" y="236" width="36" height="136" rx="8" fill="url(#lgdNavyGrad)" />
 
-  <!-- Center Sub-District (Blue) -->
-  <rect x="196" y="310" width="120" height="84" rx="20" fill="url(#lgdNavyGrad)" stroke="#93c5fd" stroke-width="3.5" filter="url(#lgdGlow)" />
-  <circle cx="256" cy="352" r="14" fill="#ffffff" />
-  <circle cx="256" cy="352" r="6" fill="#1e3a8a" />
+    <!-- Pillar 2: Districts -->
+    <rect x="176" y="212" width="68" height="184" rx="14" fill="url(#lgdNavyGrad)" stroke="#1e293b" stroke-width="3" />
+    <rect x="192" y="236" width="36" height="136" rx="8" fill="url(#lgdGoldGrad)" />
 
-  <!-- Right Block Node (Green) -->
-  <rect x="312" y="310" width="120" height="84" rx="20" fill="url(#lgdGreenGrad)" stroke="#a7f3d0" stroke-width="3.5" filter="url(#lgdGlow)" />
-  <circle cx="372" cy="352" r="14" fill="#ffffff" />
-  <circle cx="372" cy="352" r="6" fill="#059669" />
+    <!-- Pillar 3: Sub-Districts -->
+    <rect x="276" y="212" width="68" height="184" rx="14" fill="url(#lgdNavyGrad)" stroke="#1e293b" stroke-width="3" />
+    <rect x="292" y="236" width="36" height="136" rx="8" fill="#38bdf8" />
+
+    <!-- Pillar 4: Blocks / Villages -->
+    <rect x="376" y="212" width="68" height="184" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="3" />
+    <rect x="392" y="236" width="36" height="136" rx="8" fill="url(#lgdGreenGrad)" />
+
+    <!-- Foundation Base Plinth (2 Solid Steps) -->
+    <rect x="48" y="396" width="424" height="36" rx="10" fill="#1e293b" />
+    <rect x="32" y="432" width="456" height="44" rx="14" fill="url(#lgdGreenGrad)" />
+  </g>
 </svg>
