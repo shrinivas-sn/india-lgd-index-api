@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "slug": "lgd-admin-hierarchy",
+  "name": "India LGD Index API",
+  "one_liner": "LGD India Administrative Hierarchy API - states, districts, sub-districts, blocks with official LGD codes",
+  "category": "Government",
+  "repo": "https://github.com/shrinivas-sn/india-lgd-index-api",
+  "source": {
+    "name": "Local Government Directory (LGD), MoPR and ORGI",
+    "url": "https://lgdirectory.gov.in",
+    "license": "Government Open Data License - India (via data.gov.in)"
+  },
+  "not_provided": [],
+  "stack": null,
+  "deploy": {
+    "portal_url": "https://india-lgd-index-api.vercel.app",
+    "api_base_url": "https://india-lgd-index-api.vercel.app",
+    "health_path": "/healthz",
+    "warmup_path": "/healthz"
+  },
+  "routes": [
+    { "path": "/", "base": "portal", "kind": "page" },
+    { "path": "/docs", "base": "portal", "kind": "page" },
+    { "path": "/v1/states", "base": "api", "kind": "api" },
+    { "path": "/v1/districts?state=32", "base": "api", "kind": "api" },
+    { "path": "/v1/subdistricts?state=28", "base": "api", "kind": "api" },
+    { "path": "/v1/blocks?state=28", "base": "api", "kind": "api" },
+    { "path": "/v1/search?q=ramgarh", "base": "api", "kind": "api" },
+    { "path": "/healthz", "base": "api", "kind": "api" },
+    { "path": "/freshness", "base": "api", "kind": "api" },
+    { "path": "/openapi.json", "base": "api", "kind": "api" }
+  ],
+  "submission": {
+    "terms": ["LGD", "Local Government Directory", "subdistrict", "development block", "India administrative hierarchy"],
+    "targets": [{ "repo": "public-apis/public-apis", "pr": 7589 }]
+  }
+}
