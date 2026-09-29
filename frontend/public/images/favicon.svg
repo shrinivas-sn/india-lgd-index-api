@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <linearGradient id="lgdNavy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1e3a8a" />
+    </linearGradient>
+    <linearGradient id="lgdGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="lgdGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+
+  <!-- Base Badge / Container -->
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+
+  <!-- Hierarchy Connecting Lines -->
+  <path d="M32 20V34 M18 34H46 M18 34V44 M32 34V44 M46 34V44" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Level 1: Central / State Hub (Apex Node) -->
+  <rect x="25" y="11" width="14" height="14" rx="4" fill="url(#lgdNavy)" stroke="#60a5fa" stroke-width="1.5" />
+  <circle cx="32" cy="18" r="2.5" fill="#ffffff" />
+
+  <!-- Level 2: District Nodes (Middle Layer) -->
+  <rect x="11" y="38" width="14" height="12" rx="3.5" fill="#1e293b" stroke="url(#lgdGold)" stroke-width="1.5" />
+  <circle cx="18" cy="44" r="2" fill="#fbbf24" />
+
+  <rect x="25" y="38" width="14" height="12" rx="3.5" fill="#1e293b" stroke="url(#lgdNavy)" stroke-width="1.5" />
+  <circle cx="32" cy="44" r="2" fill="#38bdf8" />
+
+  <rect x="39" y="38" width="14" height="12" rx="3.5" fill="#1e293b" stroke="url(#lgdGreen)" stroke-width="1.5" />
+  <circle cx="46" cy="44" r="2" fill="#34d399" />
+</svg>

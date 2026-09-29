@@ -12,8 +12,9 @@ const links = [
 export default function Navbar() {
   return (
     <header className="site-header">
-      <Link to="/" className="brand">
-        LGD Hierarchy API
+      <Link to="/" className="brand" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+        <img src="/images/favicon.svg" alt="LGD API Logo" style={{ width: '22px', height: '22px', display: 'inline-block' }} />
+        <span>LGD Hierarchy API</span>
         <span className="brand-tag">v1 · keyless</span>
       </Link>
       <nav className="nav">
