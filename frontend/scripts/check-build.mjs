@@ -29,6 +29,10 @@ assert.notEqual(home.match(/<title>(.*?)<\/title>/)?.[1], docs.match(/<title>(.*
 assert.notEqual(docs.match(/<title>(.*?)<\/title>/)?.[1], guides.match(/<title>(.*?)<\/title>/)?.[1]);
 assert.match(spa, /name="robots" content="noindex, nofollow"/);
 assert.doesNotMatch(spa, /<h1[ >]/);
+const notFound = fs.readFileSync(path.join(dist, '404.html'), 'utf8');
+assert.match(notFound, /<div id="root"><[\s\S]*<h1[ >]Page not found/, '404.html needs the rendered not-found page');
+assert.match(notFound, /name="robots" content="noindex"/);
+assert.doesNotMatch(notFound, /rel="canonical"/);
 assert.deepEqual(config.rewrites.map((entry) => entry.source).sort(), ['/docs', '/guides', '/guides/:id', '/playground', '/status']);
 assert.ok(config.rewrites.filter((entry) => entry.source === '/docs' || entry.source === '/guides' || entry.source === '/guides/:id').every((entry) => entry.destination.endsWith('/index.html')));
 assert.ok(config.rewrites.filter((entry) => entry.source !== '/docs' && entry.source !== '/guides' && entry.source !== '/guides/:id').every((entry) => entry.destination === '/spa.html'));

@@ -61,6 +61,15 @@ try {
     .replace(/<title>[^<]*<\/title>/, '<title>India LGD Index — interactive tools</title>')
     .replace('</head>', '    <meta name="robots" content="noindex, nofollow" />\n</head>');
   await fs.writeFile(path.join(distDir, 'spa.html'), spa);
+  const notFoundBody = renderToString(React.createElement(MemoryRouter, { initialEntries: ['/__not-found__'] }, React.createElement(AppContent)));
+  const notFound = template
+    .replace('<div id="root"></div>', `<div id="root">${notFoundBody}</div>`)
+    .replace(/<title>[^<]*<\/title>/, '<title>Page not found — India LGD Index</title>')
+    .replace(/<meta name="description" content="[^"]*"\s*\/>/, '<meta name="description" content="This page does not exist." />')
+    .replace(/\s*<link rel="canonical" href="[^"]*"\s*\/?>/, '')
+    .replace(/\s*<meta property="og:url" content="[^"]*"\s*\/?>/, '')
+    .replace('</head>', '    <meta name="robots" content="noindex" />\n</head>');
+  await fs.writeFile(path.join(distDir, '404.html'), notFound);
   await fs.writeFile(path.join(distDir, 'robots.txt'), preview ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl.href}sitemap.xml\n`);
   if (preview) {
     // Vite copies public/sitemap.xml into dist before prerendering.
