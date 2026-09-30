@@ -21,6 +21,7 @@
   "routes": [
     { "path": "/", "base": "portal", "kind": "page" },
     { "path": "/docs", "base": "portal", "kind": "page" },
+    { "path": "/guides", "base": "portal", "kind": "page" },
     { "path": "/v1/states", "base": "api", "kind": "api" },
     { "path": "/v1/districts?state=32", "base": "api", "kind": "api" },
     { "path": "/v1/subdistricts?state=28", "base": "api", "kind": "api" },
@@ -32,6 +33,20 @@
   ],
   "submission": {
     "terms": ["LGD", "Local Government Directory", "subdistrict", "development block", "India administrative hierarchy"],
-    "targets": [{ "repo": "public-apis/public-apis", "pr": 7589 }]
+    "targets": [
+      {
+        "repo": "public-apis/public-apis",
+        "pr": 7589,
+        "row": {
+          "title": "India LGD Index",
+          "url": "https://india-lgd-index-api.vercel.app/docs",
+          "description": "Free, keyless Indian states, districts, sub-districts and development blocks with LGD codes",
+          "category": "Government",
+          "auth": "No",
+          "https": "Yes",
+          "cors": "Yes"
+        }
+      }
+    ]
   }
 }
