@@ -12,7 +12,7 @@ test('liveness and freshness are separate operational responses', async () => {
     assert.equal((await live.json()).status, 'ok');
     const freshness = await fetch(`${base}/freshness`);
     assert.equal(freshness.status, 200);
-    assert.equal((await freshness.json()).source_date, '23Sep2026');
+    assert.equal((await freshness.json()).source_date, require('../data/meta.json').source_date);
   } finally {
     await new Promise((resolve) => server.close(resolve));
   }
